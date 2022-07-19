@@ -1,0 +1,10 @@
+%======================================================================
+\chapter{Applications}
+%======================================================================
+\section{Visualization}
+
+\section{Library Fission}
+Modern software uses libraries extensively, to reuse functionality. Over time, libraries tend to extend their functionality, introduce more features and modify existing ones. This could lead to huge library sizes, a lot of which goes unused by a client that imports it. This is called software bloating and there has been work around debloating. Debloating focuses on the client’s execution and analyzing the client. We propose library fission, which focuses on splitting libraries based on client usage. This is a more permanent solution to bloating and does not require running analyses on clients for every execution. (We aim to split libraries based on client behaviour in a way that sub-modules of the fissioned library have common functionality.)
+
+\section{Upgrades, Breaking Changes and Backward Compatibility}
+Library developers can observe different usage patterns of their APIs. The clusters observed in library packages can help with new version releases. Breaking changes might be restricted to clusters and library developers can choose whether to make clusters from new versions backward compatible with other clusters from older versions or not. Clients can also check if breaking changes in new library versions will affect their code during upgrades. 
