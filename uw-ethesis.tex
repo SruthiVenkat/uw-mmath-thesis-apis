@@ -85,9 +85,27 @@
 % CHANGE THIS VALUE TO "true" as necessary, to improve printed results for hard copies
 % by overriding some options of the hyperref package below.
 
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{subfig}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\tikzstyle{block} = [rectangle, draw, 
+    text width=5em, text centered, rounded corners, minimum height=2em]
+\tikzstyle{oval} = [ellipse, draw, 
+    text width=5em, text centered, rounded corners, minimum height=2em]
+\tikzstyle{bt} = [rectangle, draw, 
+    text width=1em, text centered, rounded corners, minimum height=2em]
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{positioning}
+\usetikzlibrary{fit}
+\usetikzlibrary{shapes.geometric}
+
 %\usepackage{nomencl} % For a nomenclature (optional; available from ctan.org)
 \usepackage{amsmath,amssymb,amstext} % Lots of math symbols and environments
-\usepackage[pdftex]{graphicx} % For including graphics N.B. pdftex graphics driver 
+%\usepackage[pdftex]{graphicx} % For including graphics N.B. pdftex graphics driver 
 
 % Hyperlinks make it very easy to navigate an electronic document.
 % In addition, this is where you should specify the thesis title
@@ -233,15 +251,15 @@ description={Random vector: a location in n-dimensional Cartesian space, where e
 
 \input{related-work}
 
-\input{rqs}
+%\input{rqs}
 
 \input{api-study}
 
 \input{usage-scenarios}
 
-\input{methodology}
+%\input{methodology}
 
-\input{discussion}
+%\input{discussion}
 
 \input{conclusion}
 %----------------------------------------------------------------------

@@ -1,6 +1,52 @@
 %======================================================================
 \chapter{API Usage Patterns Study}
 %======================================================================
-This would be a good place for some figures and tables.
+We aim to take a snapshot of where current software practices stand: we investigate how APIs are used and misused. 
+\section{Methodology}
+\label{sec:methodology}
 
-Some notes on figures and photographs\ldots
+\begin{figure*}[h]
+ \begin{center}
+\resizebox{0.7\textwidth}{!}{
+  \begin{tikzpicture}
+    \node[block] (client) {client};
+    \node[block,below=1cm of client] (library) {library};
+
+    \draw (library) -- node[left] (depends) {depends on} (client);
+
+    \node[above left=.75em of client] (ja) {\begin{minipage}{7em} modify \\with Javassist \end{minipage}};
+    \draw[-Latex] (ja) -> (client);
+    \draw[-Latex] (ja) to [->,bend right=35] (library.west);
+
+    \node[block, above right=2em of client,xshift=-2em] (olib) {other library};
+    \draw (client) -- node[right,xshift=.1em] (also) {also depends on} (olib);
+
+    \node[oval,right=of depends] (test) {maven/gradle: run tests};
+
+    \draw[-Latex] (client) to [->,bend left=15] (test);
+
+    \node[block, right=10em of client] (output) {test output};
+    \node[block, right=10em of library] (raw) {raw API usage info};
+
+    \draw[-Latex] (test) to (output);
+    \draw[-Latex] (test) to (raw);
+
+    \node[oval, right=of raw] (Py) {Python scripts};
+    \draw[-Latex] (raw) to (Py);
+
+    \node[block, right=1em of Py] (viz) {D3 visualizations};
+    \draw[-Latex] (Py) to (viz);
+  \end{tikzpicture}
+}
+  \caption{Our instrumentation workflow. Using Javassist, we analyze and instrument clients and run their test suites. We process the generated data with Python scripts to create D3 visualizations.}
+  \label{fig:workflow}
+ \end{center}
+\end{figure*}
+
+
+\section{API Usage Patterns}
+\label{sec:patterns}
+
+\section{Results}
+\label{sec:results}
+
