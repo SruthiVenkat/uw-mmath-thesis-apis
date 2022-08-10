@@ -1,0 +1,683 @@
+% Bibliography of key references for "LaTeX for Thesis and Large Documents"
+% For use with BibTeX
+
+@book{goossens.book,
+	author =	"Michel Goossens and Frank Mittelbach and 
+			 Alexander Samarin",
+	title =		"The \LaTeX\ Companion",
+	year = 		"1994",
+	publisher =	"Addison-Wesley",
+	address = 	"Reading, Massachusetts"
+}
+
+@book{knuth.book,
+        author =        "Donald Knuth",
+        title =         "The \TeX book",
+        year =          "1986",
+        publisher =     "Addison-Wesley",
+        address =       "Reading, Massachusetts"
+}
+
+@book{lamport.book,
+	author =        "Leslie Lamport",
+	title =         "\LaTeX\ --- A Document Preparation System",
+        edition =       "Second",
+	year = 		"1994",
+	publisher = 	"Addison-Wesley",
+	address =       "Reading, Massachusetts"
+}
+
+
+@inproceedings{10.1145/2814270.2814313,
+author = {Mastrangelo, Luis and Ponzanelli, Luca and Mocci, Andrea and Lanza, Michele and Hauswirth, Matthias and Nystrom, Nathaniel},
+title = {Use at Your Own Risk: The Java Unsafe API in the Wild},
+year = {2015},
+isbn = {9781450336895},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2814270.2814313},
+doi = {10.1145/2814270.2814313},
+abstract = { Java is a safe language. Its runtime environment provides strong safety guarantees
+that any Java application can rely on. Or so we think. We show that the runtime actually
+does not provide these guarantees---for a large fraction of today's Java code. Unbeknownst
+to many application developers, the Java runtime includes a "backdoor" that allows
+expert library and framework developers to circumvent Java's safety guarantees. This
+backdoor is there by design, and is well known to experts, as it enables them to write
+high-performance "systems-level" code in Java. For much the same reasons that safe
+languages are preferred over unsafe languages, these powerful---but unsafe---capabilities
+in Java should be restricted. They should be made safe by changing the language, the
+runtime system, or the libraries. At the very least, their use should be restricted.
+This paper is a step in that direction. We analyzed 74 GB of compiled Java code, spread
+over 86,479 Java archives, to determine how Java's unsafe capabilities are used in
+real-world libraries and applications. We found that 25% of Java bytecode archives
+depend on unsafe third-party Java code, and thus Java's safety guarantees cannot be
+trusted. We identify 14 different usage patterns of Java's unsafe capabilities, and
+we provide supporting evidence for why real-world code needs these capabilities. Our
+long-term goal is to provide a foundation for the design of new language features
+to regain safety in Java. },
+booktitle = {Proceedings of the 2015 ACM SIGPLAN International Conference on Object-Oriented Programming, Systems, Languages, and Applications},
+pages = {695–710},
+numpages = {16},
+keywords = {patterns, unsafe, Java, Maven Central, mining, Stack Overflow},
+location = {Pittsburgh, PA, USA},
+series = {OOPSLA 2015}
+}
+
+@Article{evans20:_unsaf,
+  author =       {Ben Evans},
+  title =        {The {Unsafe} class: Unsafe at any speed},
+  journal =      {Java Magazine},
+  year =         2020,
+  month =     {May},
+  note =      {\url{https://blogs.oracle.com/javamagazine/post/the-unsafe-class-unsafe-at-any-speed}}}
+
+@inproceedings{thummalapenta08:_spotw,
+  author    = {Suresh Thummalapenta and
+               Tao Xie},
+  title     = {{SpotWeb}: Detecting Framework Hotspots and Coldspots via Mining Open
+               Source Code on the Web},
+  booktitle = {ASE},
+  pages     = {327--336},
+  publisher = {{IEEE} Computer Society},
+  year      = 2008,
+  timestamp = {Wed, 16 Oct 2019 14:14:55 +0200},
+  biburl    = {https://dblp.org/rec/conf/kbse/ThummalapentaX08.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@INPROCEEDINGS{piccioni13:_empir_study_api_usabil,
+  author={Piccioni, Marco and Furia, Carlo A. and Meyer, Bertrand},
+  booktitle={2013 ACM / IEEE International Symposium on Empirical Software Engineering and Measurement}, 
+  title={An Empirical Study of {API} Usability}, 
+  year=2013,
+  pages={5-14},
+  doi={10.1109/ESEM.2013.14}}
+
+
+@inproceedings{viljamaa03:_rever_engin_framew_reuse_inter,
+author = {Viljamaa, Jukka},
+title = {Reverse Engineering Framework Reuse Interfaces},
+year = 2003,
+isbn = 1581137435,
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/940071.940101},
+doi = {10.1145/940071.940101},
+booktitle = {FSE},
+pages = {217–226},
+numpages = 10,
+keywords = {reuse, reverse engineering, framework, pattern, documentation, formal concept analysis},
+location = {Helsinki, Finland},
+}
+
+@INPROCEEDINGS{yasmin20:_first_look_deprec_restf_apis,
+  author={Yasmin, Jerin and Tian, Yuan and Yang, Jinqiu},
+  booktitle={2020 IEEE International Conference on Software Maintenance and Evolution (ICSME)}, 
+  title={A First Look at the Deprecation of {RESTful} {APIs}: An Empirical Study}, 
+  year=2020,
+  pages={151--161},
+  doi={10.1109/ICSME46990.2020.00024}}
+
+@inproceedings{zhou16:_api_deprec,
+    author = {Zhou, Jing and Walker, Robert J.},
+    title = {{API} Deprecation: A Retrospective Analysis and Detection Method for Code Examples on the Web},
+    year = 2016,
+    isbn = 9781450342186,
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/2950290.2950298},
+    doi = {10.1145/2950290.2950298},
+    booktitle = {Proceedings of the 2016 24th ACM SIGSOFT International Symposium on Foundations of Software Engineering},
+    pages = {266–277},
+    numpages = 12,
+    keywords = {Deprecation Watcher, deprecation practices, web-based documentation, API deprecation},
+    location = {Seattle, WA, USA},
+    series = {FSE 2016}
+    }      
+
+
+@INPROCEEDINGS{landman17:_chall_static_analy_java_reflec,
+  author={Landman, Davy and Serebrenik, Alexander and Vinju, Jurgen J.},
+  booktitle={2017 IEEE/ACM 39th International Conference on Software Engineering (ICSE)}, 
+  title={Challenges for Static Analysis of {Java} Reflection---Literature Review and Empirical Study}, 
+  year=2017,
+  pages={507-518},
+  doi={10.1109/ICSE.2017.53}}
+
+@inproceedings{bodden2011taming,
+	title={Taming reflection: Aiding static analysis in the presence of reflection and custom class loaders},
+	author={Bodden, Eric and Sewe, Andreas and Sinschek, Jan and Oueslati, Hela and Mezini, Mira},
+	booktitle={2011 33rd International Conference on Software Engineering (ICSE)},
+	pages={241--250},
+	year={2011},
+	organization={IEEE}
+}
+
+
+@inproceedings{mcilroy1968mass,
+	title={Mass-produced software components},
+	author={McIlroy, M Douglas and Buxton, J and Naur, Peter and Randell, Brian},
+	booktitle={Proceedings of the 1st International Conference on Software Engineering, Garmisch-Partenkirchen, Germany},
+	pages={88--98},
+	year={1968}
+}
+
+@inproceedings{kikas2017structure,
+	title={Structure and evolution of package dependency networks},
+	author={Kikas, Riivo and Gousios, Georgios and Dumas, Marlon and Pfahl, Dietmar},
+	booktitle={MSR},
+	pages={102--112},
+	year={2017},
+	organization={IEEE}
+}
+
+
+@article{soto2021comprehensive,
+	title={A comprehensive study of bloated dependencies in the {Maven} ecosystem},
+	author={Soto-Valero, C{\'e}sar and Harrand, Nicolas and Monperrus, Martin and Baudry, Benoit},
+	journal={Empirical Software Engineering},
+	volume={26},
+	number={3},
+	pages={1--44},
+	year={2021},
+	publisher={Springer}
+}
+
+@inproceedings{benelallam2019maven,
+	title={The {Maven} dependency graph: a temporal graph-based representation of {Maven} {Central}},
+	author={Benelallam, Amine and Harrand, Nicolas and Soto-Valero, C{\'e}sar and Baudry, Benoit and Barais, Olivier},
+	booktitle={MSR},
+	pages={344--348},
+	year={2019},
+	organization={IEEE}
+}
+
+
+@inproceedings{raemaekers2014semantic,
+	title={Semantic versioning versus breaking changes: A study of the maven repository},
+	author={Raemaekers, Steven and Van Deursen, Arie and Visser, Joost},
+	booktitle={SCAM},
+	pages={215--224},
+	year={2014},
+	organization={IEEE}
+}
+
+@article{dietrich2017xcorpus,
+	title={XCorpus--an executable corpus of {Java} programs},
+	author={Dietrich, JB and Schole, Henrik and Sui, Li and Tempero, Ewan},
+	year={2017},
+	journal={jot.fm},
+	publisher={AITO}
+}
+
+
+@Article{collins16:_how,
+  author =       {Keith Collins},
+  title =        {How one programmer broke the internet by deleting a tiny piece of code},
+  journal =      {Quartz},
+  year =         2016,
+  month =     {March},
+  note =      {\url{https://qz.com/646467/how-one-programmer-broke-the-internet-by-deleting-a-tiny-piece-of-code/}. Accessed 19 October 2021}}
+
+
+@INPROCEEDINGS{elizalde18:_towar_smoot_librar_migrat,
+  author={Elizalde Zapata, Rodrigo and Kula, Raula Gaikovina and Chinthanet, Bodin and Ishio, Takashi and Matsumoto, Kenichi and Ihara, Akinori},
+  booktitle={2018 IEEE International Conference on Software Maintenance and Evolution (ICSME)}, 
+  title={Towards Smoother Library Migrations: A Look at Vulnerable Dependency Migrations at Function Level for npm {JavaScript} Packages}, 
+  year=2018,
+  pages={559-563},
+  doi={10.1109/ICSME.2018.00067}}
+
+@inproceedings{chinthanet20:_code_based_vulner_detec_node,
+author = {Chinthanet, Bodin and Ponta, Serena Elisa and Plate, Henrik and Sabetta, Antonino and Kula, Raula Gaikovina and Ishio, Takashi and Matsumoto, Kenichi},
+title = {Code-Based Vulnerability Detection in Node.Js Applications: How Far Are We?},
+year = 2020,
+isbn = 9781450367684,
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3324884.3421838},
+doi = {10.1145/3324884.3421838},
+abstract = {With one of the largest available collection of reusable packages, the JavaScript
+runtime environment Node.js is one of the most popular programming application. With
+recent work showing evidence that known vulnerabilities are prevalent in both open
+source and industrial software, we propose and implement a viable code-based vulnerability
+detection tool for Node.js applications. Our case study lists the challenges encountered
+while implementing our Node.js vulnerable code detector.},
+booktitle = {Proceedings of the 35th IEEE/ACM International Conference on Automated Software Engineering},
+pages = {1199–1203},
+numpages = 5,
+location = {Virtual Event, Australia},
+series = {ASE '20}
+}
+
+@article{sadowski2018lessons,
+        title={Lessons from building static analysis tools at {Google}},
+        author={Sadowski, Caitlin and Aftandilian, Edward and Eagle, Alex and Miller-Cushon, Liam and Jaspan, Ciera},
+        journal={Communications of the ACM},
+        volume={61},
+        number={4},
+        pages={58--66},
+        year={2018},
+        publisher={ACM New York, NY, USA}
+}
+
+@INPROCEEDINGS{kerzazi14:_why_do_autom_build_break,
+  author={Kerzazi, Noureddine and Khomh, Foutse and Adams, Bram},
+  booktitle={2014 IEEE International Conference on Software Maintenance and Evolution}, 
+  title={Why Do Automated Builds Break? An Empirical Study}, 
+  year=2014,
+  pages={41-50},
+  doi={10.1109/ICSME.2014.26}}
+
+@InProceedings{shah13:_autom_depen_break_refac_java,
+  author =       {Syed Muhammad Ali Shah and Jens Dietrich and Catherine McCartin},
+  title =        {On the Automation of Dependency-Breaking Refactorings in {Java}},
+  booktitle = {2014 IEEE International Conference on Software Maintenance},
+  year =      2013,
+  pages =     {160--169},
+  month =     {Sep},
+  address =   {Eindhoven, NL},
+  doi={10.1109/ICSM.2013.27}}
+
+@article{DBLP:journals/jss/HejderupG22,
+  author    = {Joseph Hejderup and
+               Georgios Gousios},
+  title     = {Can we trust tests to automate dependency updates? {A} case study
+               of {Java} Projects},
+  journal   = {J. Syst. Softw.},
+  volume    = {183},
+  pages     = {111097},
+  year      = {2022},
+  url       = {https://doi.org/10.1016/j.jss.2021.111097},
+  doi       = {10.1016/j.jss.2021.111097},
+  timestamp = {Wed, 15 Dec 2021 10:30:07 +0100},
+  biburl    = {https://dblp.org/rec/journals/jss/HejderupG22.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@techreport{fitzgerald2000marmot,
+author = {Fitzgerald, Bob and Knoblock, Todd B. and Ruf, Erik and Steensgaard, Bjarne and Tarditi, David},
+title = {Marmot: An Optimizing Compiler for Java},
+year = {2000},
+month = {March},
+abstract = {The Marmot system is a research platform for studying the implementation of high level programming languages. It currently comprises an optimizing native code compiler, runtime system, and libraries for a large subset of Java. Marmot integrates well-known representation, optimization, code generation, and runtime techniques with a few Java-specific features to achieve competitive performance. This paper contains a description of the Marmot system design, along with highlights of our experience applying and adapting traditional implementation techniques to Java. A detailed performance evaluation assesses both Marmot's overall performance relative to other Java and C++ implementations, and the relative costs of various Java language features in Marmot-compiled code. Our experience with Marmot has demonstrated that well-known compilation techniques can produce very good performance for static Java applications comparable or superior to other Java systems, and approaching that of C++ in some cases.},
+publisher = {Wiley},
+url = {https://www.microsoft.com/en-us/research/publication/marmot-an-optimizing-compiler-for-java/},
+pages = {29},
+institution = {Microsoft Research},
+number = {MSR-TR-99-33},
+}
+@article{kula18:_do_devel_updat_their_librar_depen,
+author = {Kula, Raula Gaikovina and German, Daniel M. and Ouni, Ali and Ishio, Takashi and Inoue, Katsuro},
+title = {Do Developers Update Their Library Dependencies?},
+year = 2018,
+issue_date = {February  2018},
+publisher = {Kluwer Academic Publishers},
+address = {USA},
+volume = 23,
+number = 1,
+issn = {1382-3256},
+url = {https://doi.org/10.1007/s10664-017-9521-5},
+doi = {10.1007/s10664-017-9521-5},
+abstract = {Third-party library reuse has become common practice in contemporary software development, as it includes several benefits for developers. Library dependencies are constantly evolving, with newly added features and patches that fix bugs in older versions. To take full advantage of third-party reuse, developers should always keep up to date with the latest versions of their library dependencies. In this paper, we investigate the extent of which developers update their library dependencies. Specifically, we conducted an empirical study on library migration that covers over 4,600 GitHub software projects and 2,700 library dependencies. Results show that although many of these systems rely heavily on dependencies, 81.5% of the studied systems still keep their outdated dependencies. In the case of updating a vulnerable dependency, the study reveals that affected developers are not likely to respond to a security advisory. Surveying these developers, we find that 69% of the interviewees claimed to be unaware of their vulnerable dependencies. Moreover, developers are not likely to prioritize a library update, as it is perceived to be extra workload and responsibility. This study concludes that even though third-party reuse is common practice, updating a dependency is not as common for many developers.},
+journal = {Empirical Softw. Engg.},
+month = {feb},
+pages = {384–417},
+numpages = 34,
+keywords = {Security vulnerabilities, Software maintenance, Software reuse}
+}
+
+@inproceedings{foo18:_effic_static_check_librar_updat,
+author = {Foo, Darius and Chua, Hendy and Yeo, Jason and Ang, Ming Yi and Sharma, Asankhaya},
+title = {Efficient Static Checking of Library Updates},
+year = 2018,
+isbn = 9781450355735,
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3236024.3275535},
+doi = {10.1145/3236024.3275535},
+abstract = {Software engineering practices have evolved to the point where a developer writing a new application today doesn’t start from scratch, but reuses a number of open source libraries and components. These third-party libraries evolve independently of the applications in which they are used, and may not maintain stable interfaces as bugs and vulnerabilities in them are fixed. This in turn causes API incompatibilities in downstream applications which must be manually resolved. Oversight here may manifest in many ways, from test failures to crashes at runtime. To address this problem, we present a static analysis for automatically and efficiently checking if a library upgrade introduces an API incompatibility. Our analysis does not rely on reported version information from library developers, and instead computes the actual differences between methods in libraries across different versions. The analysis is scalable, enabling real-time diff queries involving arbitrary pairs of library versions. It supports a vulnerability remediation product which suggests library upgrades automatically and is lightweight enough to be part of a continuous integration/delivery (CI/CD) pipeline. To evaluate the effectiveness of our approach, we determine semantic versioning adherence of a corpus of open source libraries taken from Maven Central, PyPI, and RubyGems. We find that on average, 26% of library versions are in violation of semantic versioning. We also analyze a collection of popular open source projects from GitHub to determine if we can automatically update libraries in them without causing API incompatibilities. Our results indicate that we can suggest upgrades automatically for 10% of the libraries.},
+booktitle = {FSE},
+pages = {791–796},
+numpages = 6,
+keywords = {api diffs, automated remediation, call graphs, library upgrades, semantic versioning},
+location = {Lake Buena Vista, FL, USA},
+}
+
+@inproceedings{bruce20:_jshrin,
+author = {Bruce, Bobby R. and Zhang, Tianyi and Arora, Jaspreet and Xu, Guoqing Harry and Kim, Miryung},
+title = {JShrink: In-Depth Investigation into Debloating Modern Java Applications},
+year = 2020,
+isbn = 9781450370431,
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3368089.3409738},
+abstract = {Modern software is bloated. Demand for new functionality has led developers to include more and more features, many of which become unneeded or unused as software evolves. This phenomenon, known as software bloat, results in software consuming more resources than it otherwise needs to. How to effectively and automatically debloat software is a long-standing problem in software engineering. Various debloating techniques have been proposed since the late 1990s. However, many of these techniques are built upon pure static analysis and have yet to be extended and evaluated in the context of modern Java applications where dynamic language features are prevalent.  To this end, we develop an end-to-end bytecode debloating framework called JShrink. It augments traditional static reachability analysis with dynamic profiling and type dependency analysis and renovates existing bytecode transformations to account for new language features in modern Java. We highlight several nuanced technical challenges that must be handled properly and examine behavior preservation of debloated software via regression testing. We find that (1) JShrink is able to debloat our real-world Java benchmark suite by up to 47% (14% on average); (2) accounting for dynamic language features is indeed crucial to ensure behavior preservation---reducing 98% of test failures incurred by a purely static equivalent, Jax, and 84% for ProGuard; and (3) compared with purely dynamic approaches, integrating static analysis with dynamic profiling makes the debloated software more robust to unseen test executions---in 22 out of 26 projects, the debloated software ran successfully under new tests.},
+booktitle = {Proceedings of the 28th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering},
+pages = {135–146},
+numpages = 12
+}
+
+@inproceedings{lam20:_puttin_seman_seman_version,
+ author = {Patrick Lam and Jens Dietrich and David J. Pearce},
+ title = {Putting the Semantics into Semantic Versioning},
+ booktitle = {Onward! Essays},
+ year = 2020,
+ location = {Virtual event},
+ numpages = 21
+}
+
+@article{tip02:_pract_extrac_techn_java,
+author = {Tip, Frank and Sweeney, Peter F. and Laffra, Chris and Eisma, Aldo and Streeter, David},
+title = {Practical Extraction Techniques for {Java}},
+year = 2002,
+issue_date = {November 2002},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = 24,
+number = 6,
+issn = {0164-0925},
+url = {https://doi.org/10.1145/586088.586090},
+doi = {10.1145/586088.586090},
+abstract = {Reducing application size is important for software that is distributed via the internet, in order to keep download times manageable, and in the domain of embedded systems, where applications are often stored in (Read-Only or Flash) memory. This paper explores extraction techniques such as the removal of unreachable methods and redundant fields, inlining of method calls, and transformation of the class hierarchy for reducing application size. We implemented a number of extraction techniques in Jax, an application extractor for Java, and evaluated their effectiveness on a set of large Java applications. We found that, on average, the class file archives for these benchmarks were reduced to 37.5% of their original size. Modeling dynamic language features such as reflection, and extracting software distributions other than complete applications requires additional user input. We present a uniform approach for supplying this input that relies on MEL, a modular specification language. We also discuss a number of issues and challenges associated with the extraction of embedded systems applications.},
+journal = {ACM Trans. Program. Lang. Syst.},
+month = {nov},
+pages = {625–666},
+numpages = 42,
+keywords = {Application extraction, packaging, whole-program analysis, class hierarchy transformation, call graph construction}
+}
+
+@InProceedings{saied15:_minin_multi_api_usage_patter,
+  author =       {Mohamed Aymen Saied and Omar Benomar and Hani Abdeen and Houari Sahraoui},
+  title =        {Mining Multi-level {API} Usage Patterns},
+  booktitle = {2015 IEEE 22nd International Conference on Software Analysis, Evolution, and Reengineering (SANER)},
+  year =      2015,
+  doi = {10.1109/SANER.2015.7081812},
+  month =     {March},
+  address =   {Montreal, Canada},
+  publisher = {IEEE}}
+
+@inproceedings{durieux21,
+  author    = {Thomas Durieux and
+C{\'{e}}sar Soto{-}Valero and
+Benoit Baudry},
+title     = {{DUETS:} {A} Dataset of Reproducible Pairs of Java Library-Clients},
+year      = {2021},
+	Comment = {<b>Data showcase award</b>},
+	booktitle={MSR},
+	KEYWORDS = {Java,diversity,award},
+	X-International-Audience = {yes},
+	X-Language = {EN},
+	x-abbrv = {MSR}	
+}
+
+@InProceedings{hawes15:_codes,
+  author =       {Nathan Hawes and Stuart Marshall and Craig Anslow},
+  title =        {{CodeSurveyor}: Mapping Large-Space Software to Aid in Code Comprehension},
+  booktitle = {VISSOFT},
+  year =      2015,
+  address =   {Bremen, Germany}}
+
+@Article{kuhn10:_softw,
+  author =       {Adrian Kuhn and David Erni and Peter Loretan and Oscar Nierstrasz},
+  title =        {Software cartography: thematic software visualization with consistent layout},
+  journal =      {Journal of Software Maintenance and Evolution},
+  year =         2010,
+  volume =    22,
+  number =    3,
+  pages =     {191--210},
+  month =     {April}}
+
+@InProceedings{deline05:_stayin,
+  author =       {Robert DeLine},
+  title =        {Staying oriented with software terrain maps},
+  booktitle = {Proceedings of the Workshop on Visual Languages and Computation},
+  year =      2005}
+
+@Misc{mullans20:_keep_depen,
+  author =    {Alex Mullans},
+  title =     {Keep all your packages up to date with Dependabot},
+  howpublished = {GitHub blog: \url{https://github.blog/2020-06-01-keep-all-your-packages-up-to-date-with-dependabot/}},
+  month =     {June},
+  year =      2020}
+
+@article{myers-cacm-2016,
+author = {Myers, Brad A. and Stylos, Jeffrey},
+title = {Improving {API} Usability},
+year = {2016},
+issue_date = {June 2016},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {59},
+number = {6},
+issn = {0001-0782},
+url = {https://doi.org/10.1145/2896587},
+doi = {10.1145/2896587},
+abstract = {Human-centered design can make application programming interfaces easier for developers to use.},
+journal = {Commun. ACM},
+month = {May},
+pages = {62–69},
+numpages = {8}
+}
+
+@Article{merino18:_system_liter_review_softw_visual_evaluat,
+  author =       {Leonel Merino and Mohammad Ghafari and Craig Anslow and Oscar Nierstrasz},
+  title =        {A Systematic Literature Review of Software Visualization Evaluation},
+  journal =      {Journal of Systems and Software},
+  year =         2018}
+
+@article{livshits15:_in_defen_sound,
+author = {Livshits, Benjamin and Sridharan, Manu and Smaragdakis, Yannis and Lhot\'{a}k, Ond\v{r}ej and Amaral, J. Nelson and Chang, Bor-Yuh Evan and Guyer, Samuel Z. and Khedker, Uday P. and M\o{}ller, Anders and Vardoulakis, Dimitrios},
+title = {In Defense of Soundiness: A Manifesto},
+year = 2015,
+issue_date = {February 2015},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = 58,
+number = 2,
+issn = {0001-0782},
+url = {https://doi.org/10.1145/2644805},
+doi = {10.1145/2644805},
+abstract = {Soundy is the new sound.},
+journal = {Commun. ACM},
+month = {jan},
+pages = {44–46},
+numpages = 3
+}
+
+  
+@IEEEtranBSTCTL{IEEEexample:BSTcontrol,
+  CTLuse_article_number     = "yes",
+  CTLuse_paper              = "yes",
+  CTLuse_url                = "yes",
+  CTLuse_forced_etal        = "no",
+  CTLmax_names_forced_etal  = "10",
+  CTLnames_show_etal        = "1",
+  CTLuse_alt_spacing        = "yes",
+  CTLalt_stretch_factor     = "4",
+  CTLdash_repeated_names    = "yes",
+  CTLname_format_string     = "{f.~}{vv~}{ll}{, jj}",
+  CTLname_latex_cmd         = "",
+  CTLname_url_prefix        = "[Online]. Available:"
+}
+
+
+@InProceedings{chiba00:_load_struc_reflec_java,
+  author =       {Shigeru Chiba},
+  title =        {Load-time Structural Reflection in {Java}},
+  booktitle = {ECOOP 2000 --- Object Oriented Programming},
+  year =      2000,
+  volume =    1850,
+  series =    {LNCS},
+  pages =     {313--336},
+  publisher = {Springer Verlag}}
+
+@Misc{corporation17:_java_platf_modul_system_jsr,
+  author =    {{Oracle Corporation}},
+  title =     {{Java} {Platform} {Module} {System} ({JSR} 376)},
+  howpublished = {\url{http://openjdk.java.net/projects/jigsaw/spec/}},
+  month =     {Sep},
+  year =      2017}
+
+
+
+@Misc{alliance20:_osgi_core_releas_specif,
+  author =    {{OSGi Alliance}},
+  title =     {{OSGi} Core Release 8 Specification},
+  howpublished = {\url{http://docs.osgi.org/specification/}},
+  month =     {July},
+  year =      2020}
+
+
+@article{mastrangelo15:_use_your_own_risk,
+author = {Mastrangelo, Luis and Ponzanelli, Luca and Mocci, Andrea and Lanza, Michele and Hauswirth, Matthias and Nystrom, Nathaniel},
+title = {Use at Your Own Risk: The {Java} {Unsafe} {API} in the Wild},
+year = 2015,
+issue_date = {October 2015},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = 50,
+number = 10,
+issn = {0362-1340},
+url = {https://doi.org/10.1145/2858965.2814313},
+doi = {10.1145/2858965.2814313},
+journal = {SIGPLAN Not.},
+month = oct,
+pages = {695–710},
+numpages = 16,
+keywords = {mining, patterns, Maven Central, Stack Overflow, unsafe, Java}
+}
+
+@Article{zhong19:_empir_study_api_usages,
+  author =       {Hao Zhong and Hong Mei},
+  title =        {An Empirical Study on {API} Usages},
+  journal =      {IEEE Transactions on Software Engineering},
+  year =         2019,
+  volume =    45,
+  number =    4,
+  pages =     {319--334},
+  month =     {December}}
+
+
+@InProceedings{AmmonsETAL02MiningSpecifications,
+  author =       {Glenn Ammons and Rastislav Bod\'{\i}k and 
+                  James R. Larus},
+  title =        {Mining Specifications},
+  booktitle = {Proceedings of the 29th ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages},
+  year = 2002,
+  pages = {4–16},
+  numpages = {13},
+  location = {Portland, Oregon},
+  series = {POPL '02}
+}
+
+@inproceedings{duala-ekoko12:_askin_answer_quest_unfam_apis,
+author = {Duala-Ekoko, Ekwa and Robillard, Martin P.},
+title = {Asking and Answering Questions about Unfamiliar APIs: An Exploratory Study},
+year = 2012,
+isbn = 9781467310673,
+publisher = {IEEE Press},
+booktitle = {Proceedings of the 34th International Conference on Software Engineering},
+pages = {266–276},
+numpages = 11,
+location = {Zurich, Switzerland},
+series = {ICSE '12}
+}
+     
+
+@inproceedings{li18:_charac_deprec_android_apis,
+author = {Li, Li and Gao, Jun and Bissyand\'{e}, Tegawend\'{e} F. and Ma, Lei and Xia, Xin and Klein, Jacques},
+title = {Characterising Deprecated {Android} {APIs}},
+year = 2018,
+isbn = 9781450357166,
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3196398.3196419},
+doi = {10.1145/3196398.3196419},
+booktitle = {Proceedings of the 15th International Conference on Mining Software Repositories},
+pages = {254–264},
+numpages = 11,
+location = {Gothenburg, Sweden},
+series = {MSR '18}
+}
+
+
+@inproceedings{rinard03:_accep,
+  author    = {Martin C. Rinard},
+  editor    = {Ron Crocker and
+               Guy L. Steele Jr.},
+  title     = {Acceptability-oriented computing},
+  booktitle = {2003 ACM SIGPLAN Conference on Object-Oriented Programming Systems, Languages, and Applications Companion (OOPSLA '03 Companion), Onwards! Session},
+  pages     = {221--239},
+  publisher = {{ACM}},
+  year      = 2003,
+  url       = {https://doi.org/10.1145/949344.949402},
+  doi       = {10.1145/949344.949402},
+  timestamp = {Sat, 26 Jun 2021 14:39:41 +0200},
+  biburl    = {https://dblp.org/rec/conf/oopsla/Rinard03.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{decan2017empirical,
+	title={An empirical comparison of dependency issues in OSS packaging ecosystems},
+	author={Decan, Alexandre and Mens, Tom and Claes, Ma{\"e}lick},
+	booktitle={2017 IEEE 24th International Conference on Software Analysis, Evolution and Reengineering (SANER)},
+	pages={2--12},
+	year={2017},
+	organization={IEEE}
+}
+
+
+@inproceedings{dietrich2014broken,
+	title={Broken promises: An empirical study into evolution problems in {Java} programs caused by library upgrades},
+	author={Dietrich, Jens and Jezek, Kamil and Brada, Premek},
+	booktitle={2014 Software Evolution Week-IEEE Conference on Software Maintenance, Reengineering, and Reverse Engineering (CSMR-WCRE)},
+	pages={64--73},
+	year={2014},
+	organization={IEEE}
+}
+
+
+@inproceedings{abdalkareem2017developers,
+	title={Why do developers use trivial packages? an empirical case study on npm},
+	author={Abdalkareem, Rabe and Nourry, Olivier and Wehaibi, Sultan and Mujahid, Suhaib and Shihab, Emad},
+	booktitle={Proceedings of the 2017 11th Joint Meeting on Foundations of Software Engineering},
+	pages={385--395},
+	year={2017}
+}
+
+
+@Article{frederick87:_no_silver_bullet,
+  author =       {Frederick P. Brooks, Jr.},
+  title =        {No Silver Bullet: Essence and Accidents of Software Engineering},
+  journal =      {Computer},
+  year =         1987,
+  volume =    20,
+  number =    4,
+  pages =     {10--19},
+  month =     {April}}
+
+@article{luszcz2018apache,
+	title={Apache {Struts} 2: how technical and development gaps caused the {Equifax} Breach},
+	author={Luszcz, Jeff},
+	journal={Network Security},
+	volume={2018},
+	number={1},
+	pages={5--8},
+	year={2018},
+	publisher={Elsevier}
+}
+
+@Misc{fowler05:_inver,
+  author =    {Martin Fowler},
+  title =     {{InversionOfControl}},
+  month =     {June},
+  year =      2005,
+  note =      {\url{https://martinfowler.com/bliki/InversionOfControl.html}. Accessed 22 October 2021.}}
+
+@Misc{fowler04:_inver_contr_contain_depen_injec,
+  author =    {Martin Fowler},
+  title =     {Inversion of {Control} {Containers} and the {Dependency} {Injection} pattern},
+  month =     {January},
+  year =      2004,
+  note =      {\url{https://martinfowler.com/articles/injection.html}. Accessed 22 October 2021}}
