@@ -1,5 +1,6 @@
 %======================================================================
 \chapter{API Usage Patterns Study}
+\label{sec:apiusage}
 %======================================================================
 We aim to take a snapshot of where current software practices stand: we investigate how APIs are used and misused. 
 \section{Methodology}
@@ -42,6 +43,21 @@ We aim to take a snapshot of where current software practices stand: we investig
   \label{fig:workflow}
  \end{center}
 \end{figure*}
+
+We collect data about client usages of libraries by running client
+test suites under instrumentation. The instrumentation records API
+uses which cross client/library boundaries, closely mirroring the API
+usage patterns that we described in
+Section~\ref{sec:api-usage-examples}. We use
+Javassist~\cite{chiba00:_load_struc_reflec_java} to perform the
+instrumentation and then the build system of each project (Maven or Gradle) to run its
+tests. Figure~\ref{fig:workflow} summarizes our instrumentation and
+data capture workflow. We next describe our instrumentation implementation in detail.
+
+We identify interactions across the client/library boundaries by inspecting JAR files of
+each software component to obtain a list of classes for every component. We associate classes 
+and their members to components based on these lists. Since the JAR files contain source code,
+we ensure that none of the library uses meant solely for unit testing are captured.
 
 
 \section{API Usage Patterns}

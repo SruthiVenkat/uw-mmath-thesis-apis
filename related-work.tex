@@ -1,10 +1,64 @@
 %======================================================================
 \chapter{Related Work}
+\label{sec:related}
 %======================================================================
-Illum suscipit delenit commodo augue exerci magna veniam hendrerit dignissim duis ut feugait amet dolor dolor suscipit iriure veniam. Vel quis enim vulputate nulla facilisis volutpat vel in, suscipit facilisis dolore ut veniam, duis facilisi wisi nulla aliquip vero praesent nibh molestie consectetuer nulla. Wisi nibh exerci hendrerit consequat, nostrud lobortis ut praesent dignissim tincidunt enim eum accumsan. Lorem, nonummy duis iriure autem feugait praesent, duis, accumsan tation enim facilisi qui te dolore magna velit, iusto esse eu, zzril. Feugiat enim zzril, te vel illum, lobortis ut tation, elit luptatum ipsum, aliquam dolor sed. Ex consectetuer aliquip in, tation delenit dignissim accumsan consequat, vero, et ad eu velit ut duis ea ea odio.
 
-Vero qui, te praesent et at nisl ut in consequat blandit vel augue ut dolor illum facilisis zzril ipsum. Exerci odio, accumsan ea augue molestie lobortis zzril laoreet ex ad, adipiscing nulla, et dolore, vel te in dolor te, feugait dolore ex vel erat duis. Ut diam commodo ad eu in consequat esse in ut wisi aliquip dolore feugiat wisi eum dignissim tincidunt vel, nostrud. Ut vulputate eum euismod, diam minim eros consequat lorem aliquam et ad luptatum illum sit suscipit ut, tation in dolore euismod et iusto nulla. Iusto wisi odio quis nisl feugiat adipiscing luptatum minim. Illum, quis, erat, dolore qui quis sit dolor veniam blandit ullamcorper ex, vero nonummy, duis exerci delenit ullamcorper at feugiat. Et, ullamcorper elit vulputate iusto esse luptatum duis autem esse nulla qui.
+This work revolves around the usage of library APIs by clients. There is a large body of work investigating API usages, particularly in mining API specifications, which was first introduced by Ammons et al~\cite{AmmonsETAL02MiningSpecifications}. In this work, frequent interaction patterns are obtained from program execution. More closely related to our present work is that by Zhong and Mei~\cite{zhong19:_empir_study_api_usages}, who have investigated API usages in a dataset of 7 experimental subjects and the libraries that they depend on. Some of those findings are relevant to us: they find that clients use less than 10\% of the declared APIs in libraries. Our results corroborate these findings. Our work differs in that we are specifically not investigating sequencing relationships between API calls. Saied et al~\cite{saied15:_minin_multi_api_usage_patter} studied which API calls tended to co-occur in client code and inferred co-usage relationships between these calls. Our work goes beyond previous work by investigating not only which \emph{intended} APIs get used but also APIs which are not declared to be part of the interface but are used in practice. We record different types of usage patterns, which we explain further in Section \ref{sec:apiusage}.
 
-Praesent dolore et, delenit, laoreet dolore sed eros hendrerit consequat lobortis. Dolor nulla suscipit delenit commodo augue exerci magna veniam hendrerit dignissim duis ut feugait amet. Ad dolor suscipit iriure veniam blandit quis enim vulputate nulla facilisis volutpat vel in. Erat facilisis dolore ut veniam, duis facilisi wisi nulla aliquip vero praesent nibh molestie consectetuer nulla, iriure nibh exerci hendrerit. Vel, nostrud lobortis ut praesent dignissim tincidunt enim eum accumsan ea, nonummy duis. Ad autem feugait praesent, duis, accumsan tation enim facilisi qui te dolore magna velit, iusto esse eu, zzril vel enim zzril, te. Nisl illum, lobortis ut tation, elit luptatum ipsum, aliquam dolor sed minim consectetuer aliquip.
+Thummalapenta and Xie~\cite{thummalapenta08:_spotw} presented the related SpotWeb tool, which identifies framework hotspots (APIs that are often used) and coldspots (APIs that are never used); they do not consider framework APIs that are used but not intended to be. Hotspots and coldspots are, however, related to our investigations about client use of APIs; part of our study could be seen as investigating the prevalence of hotspots on our benchmark suite. Their notion of API usage is similar to ours, but they perform a static search to identify uses, while we dynamically observe test executions and also record static information. They also identify the top $N$ percent of used APIs as hotspots, and unused APIs as coldspots. Viljamaa~\cite{viljamaa03:_rever_engin_framew_reuse_inter} also aimed to find hotspots but used concept analysis to do so.
 
-Tation exerci delenit ullamcorper at feugiat ullamcorper, ullamcorper elit vulputate iusto esse luptatum duis autem esse nulla qui. Volutpat praesent et at nisl ut in consequat blandit vel augue ut dolor illum facilisis zzril ipsum, augue odio, accumsan ea augue molestie lobortis zzril laoreet. Ex duis, te velit illum odio, nisl qui consequat aliquip qui blandit hendrerit. Ea dolor nonummy ullamcorper nulla lorem tation laoreet in ea, ullamcorper vel consequat zzril delenit quis dignissim, vulputate tincidunt ut."
+Good API design is important, and Piccioni et al~\cite{piccioni13:_empir_study_api_usabil} carried out a detailed study to determine what contributed to API usability. Our work also takes an empirical approach and studies what clients use in practice, as well as parts of the API which are hidden from users and yet are still used. 
+
+On the subject of API evolution, Yasmin et al~\cite{yasmin20:_first_look_deprec_restf_apis} investigate deprecation and removal of APIs in the RESTful context, while Zhou and Walker~\cite{zhou16:_api_deprec} investigate it in the context of Java APIs with examples on the Web, and Li et al~\cite{li18:_charac_deprec_android_apis} investigate deprecation in the Android context. Finding deprecated APIs is useful for preventing breaking changes. Calls to removed APIs will definitely fail, especially in the RESTful context, where the server retracts the API (there is no previous library version to fall back on). Internal APIs share some similarities with deprecated APIs, in that calls to deprecated APIs may fail in the future---there are no guarantees. Our tool records all client-to-library interactions, as well as intra-client and intra-library interactions, and so we record usage of internal APIs.
+
+Our study of API usage patterns includes investigating API bypasses. Dynamic language features are one way to bypass protections,
+and Dietrich et al~\cite{dietrich2017xcorpus} explored the extent of their use in the significant XCorpus. A related bypass technique
+is unsafe Java (especially used for performance), and Mastrangelo et al~\cite{mastrangelo15:_use_your_own_risk} characterized the
+use of unsafe Java in their benchmark suite.
+
+Our goal is to investigate client uses of library code, targetting the applications of a visualization tool, VizAPI and library fission. Our results can help both client and library developers. Clients benefit from sharpened warnings about unsafe upgrades, knowledge that some upgrades are safe, and having reduced attack surfaces. Library upgrades have been investigated by many researchers, including Lam et al~\cite{lam20:_puttin_seman_seman_version} and Kura et al~\cite{kula18:_do_devel_updat_their_librar_depen}. Kura et al found that most software had outdated dependencies, and that software developers had negative feelings about being required to constantly upgrade their libraries. Foo et al~\cite{foo18:_effic_static_check_librar_updat} proposed a static analysis which detected safe upgrades, but could only certify safety for 10\% of upgrades. Our combined static and dynamic approach presents the developer with more information. The applications of this information---the visualization tool, VizAPI and library fission enables easier upgrades. From the library side, library fission can help with maintainability---smaller libraries can be released with fewer worries about downstream effects.
+
+The related notion of ``treeshakers'' has been well-known since at least the 1990s, under the recently-coined term ``debloating''.
+The Jax project by Tip et al~\cite{tip02:_pract_extrac_techn_java} was early work on debloating in the Java space.
+More recently, JShrink by Bruce et al~\cite{bruce20:_jshrin} has applied more modern techniques to programs using more modern Java features (e.g. lambdas).
+Both our approach and JShrink's integrate static and dynamic data to present recommendations to developers about what they should update and what they should exclude.
+However, debloating depends on executing and analyzing the client. Library fission, on the other hand, does not require running analyses on clients for every execution since it splits libraries based on client usage.
+
+A related concept is library shading, as done for instance by the Maven shade plugin~\footnote{\url{https://maven.apache.org/plugins/maven-shade-plugin/}}. We are looking for code that is included (due to indiscriminate inclusion of dependencies) but not used. A well-known problem that arises with dependencies is that different versions of a library can sometimes be included in the same client, and this is more likely to happen when there are more dependencies. Shading mitigates this problem, to some extent, by renaming included libraries such that each included version appears to be different.
+
+Hejderup and Gousios~\cite{DBLP:journals/jss/HejderupG22} explore a question which is central to our approach---how well do client tests exercise their dependencies' libraries? To some extent, we rely on client test suites exercising enough of the dependencies to get valid results from our analyses. Their conclusion is that a combination of static and dynamic analysis of the client has some chance of detecting breaking changes in its dependencies, and we accordingly use static analysis to supplement our dynamic results.
+
+
+% https://softwareengineering.stackexchange.com/questions/297276/what-is-a-shaded-java-dependency
+
+Shah et al~\cite{shah13:_autom_depen_break_refac_java} present refactorings which enable dependency breaking. In our work, we instead use dynamic and static data to investigate library fission and enable clients to depend on the same libraries as before, but less of them, using techniques that are similar to library shading. The difference is that we create versions of libraries that are smaller, not simply renamed.
+
+We now discuss existing work related to VizAPI, our visualization tool.
+A representative tool from the software visualization literature is
+CodeSurveyor, by Hawes et al~\cite{hawes15:_codes}, which visualizes large
+codebases using the analogy of cartographic maps. While it
+incorporates dependency information into the layout of the map, VizAPI
+differs from CodeSurveyor in that VizAPI focusses on usage relationships
+between different modules (e.g. API invocations) using dynamic analysis by executing test
+cases and static analysis to identify relationships between clients and libraries, rather
+than investigating a particular system, as CodeSurveyor does.  Earlier
+work includes the software cartography project by Kuhn et
+al~\cite{kuhn10:_softw} and software terrain maps by DeLine~\cite{deline05:_stayin}.
+
+
+Call graph visualization is, of course, a well-known technique, as seen e.g. by the Reacher tool~\cite{latoza11:_visual_call_graph}. 
+VizAPI also presents static and dynamic call information. However, we designed
+it to support decisions about library/client interactions: the granularity of nodes is packages (typically it is methods);
+and the layout is influenced by frequency of interactions. Another key difference is that VizAPI also displays interactions other than method calls, which include field usage, annotation usage, subtyping, reflective calls and dynamic proxies.
+
+Kula et al~\cite{kula14:_visual_evolut_system_their_librar_depen} also developed a tool
+to visualize changes in dependencies over time---but not how a particular client depends on its libraries. 
+Our VizAPI tool's dependency visualizations will help developers
+prioritize required upgrades as low-effort or high-effort.
+ 
+
+Bergel et al~\cite{bergel14:_domain_specif_languag_visual_softw_depen_graph} propose the {\sc Graph} DSL
+for software visualizations. That language could generate static representations similar to VizAPI's; however,
+VizAPI chooses a specific point in the design space, and we argue that this point is useful for helping developers understand
+potential impacts of upgrades.
+
