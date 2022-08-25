@@ -1,15 +1,26 @@
 %======================================================================
 \chapter{Conclusion}
 %======================================================================
-Our goal when developing VizAPI was to enable 1) library developers to make better
-decisions about pruning or modifying unused APIs and to refactor their
+The goal of this work was to enable 1) library developers to make better
+decisions when designing new APIs, pruning or modifying unused APIs and to refactor their
 libraries; and 2) client developers to make better decisions about library
 upgrades and breaking changes.
 
-% can we talk about the use of tests a bit more? how do we miss stuff?
+Further user evaluations of our VizAPI tool following
+existing techniques~\cite{merino18:_system_liter_review_softw_visual_evaluat}; in
+particular, experiments, where users perform software
+understanding and maintenance tasks can establish and improve the
+effectiveness of VizAPI.
 
-Note that client tests may
-not adequately represent actual client behaviours; however, our use of both static
+
+\subsection{Threats to Validity}
+Our threats to validity include the usual threat to external validity
+of insufficient sample size or variety---many of our seed libraries
+are JSON parser/generators, although our transitive closures result in
+a wider range of domains.
+
+There is also the construct validity issue that tests may
+not adequately represent actual client behaviours. However, our use of both static
 and dynamic information addresses this issue. Specifically, because we use
 class hierarchy analysis for our static analysis, our visualization will present
 all possible static calls---possibly too many. 
@@ -20,23 +31,11 @@ are missing (our approach is ``soundy''~\cite{livshits15:_in_defen_sound} with r
 on some execution; better tests could yield more dynamic edges. But even if
 a dynamic edge is missing, there will be a static edge if the behaviour is possible.
 
-This preliminary work has presented two usage scenarios which promise to be useful for both client and library
-developers. We intend to carry out further user evaluations of our tool following
-existing techniques~\cite{merino18:_system_liter_review_softw_visual_evaluat}; in
-particular, we aspire to perform experiments to establish the
-effectiveness of VizAPI, where we ask users to perform software
-understanding and maintenance tasks that would benefit from our tool.
-
-
-\subsection{Threats to Validity}
-Our threats to validity include: the usual threat to external validity
-of insufficient sample size or variety---many of our seed libraries
-are JSON parser/generators, although our transitive closures result in
-a wider range of domains; the construct validity issue that tests may
-not adequately represent actual client behaviours; and the possibility
-that we have missed other categories of bypass patterns---though we believe
+We may have missed other categories of bypass patterns---though we believe
 that we have chosen at least a representative sample of mechanisms to ensure
-modularity. Finally, our results apply best to Java-like languages, and
+modularity. 
+
+Finally, our results apply best to Java-like languages, and
 may vary dramatically for other languages.
 
 \subsection{Actionable Outcomes}
@@ -46,11 +45,11 @@ for both API and language/analysis designers.
 \begin{enumerate}
 \item API scope: given that both we and Thummalapenta and Xie~\cite{thummalapenta08:_spotw} find
 that APIs are sparsely used, API designers can seek to prune unused APIs;
-\item Refactoring: our results show that some existing APIs can be split into loosely-connected parts, reducing effective API surface and potentially developer cognitive burden;
+\item Refactoring: our results show that library fission is useful, i.e., some existing APIs can be split into loosely-connected parts, reducing effective API surface and potentially developer cognitive burden;
 \item Deprecation: one could investigate the scope for aggressive deprecation of unused APIs in released libraries, giving more liberty to API designers to modify their code;
 \item Modularity: API and language designers can be confident that stated encapsulation boundaries are respected.
 \end{enumerate}
-Encapsulation is a fundamental building block for software systems. API boundaries are an important way to enforce encapsulation, and our results show how developers interact with API boundaries in practice.
+%Encapsulation is a fundamental building block for software systems. API boundaries are an important way to enforce encapsulation, and our results show how developers interact with API boundaries in practice.
 
 %% \item Automatically enforce encapsulation boundaries i.e. flag code that does things it shouldn't.
 %% \begin{enumerate}

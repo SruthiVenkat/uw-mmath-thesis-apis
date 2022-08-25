@@ -84,6 +84,7 @@
 \setboolean{PrintVersion}{false} 
 % CHANGE THIS VALUE TO "true" as necessary, to improve printed results for hard copies
 % by overriding some options of the hyperref package below.
+\usepackage{mdframed}
 \usepackage{listings}
 \usepackage{graphicx}
 \usepackage{tikz}
@@ -109,6 +110,13 @@
 \newcommand{\xmark}{\ding{55}}
 \definecolor{verylightgray}{gray}{0.7}
 
+
+\renewcommand{\topfraction}{.85}
+\renewcommand{\bottomfraction}{.7}
+\renewcommand{\textfraction}{.15}
+\renewcommand{\floatpagefraction}{.66}
+\renewcommand{\dbltopfraction}{.66}
+\renewcommand{\dblfloatpagefraction}{.66}
 
 
 %\usepackage{nomencl} % For a nomenclature (optional; available from ctan.org)
@@ -266,13 +274,13 @@
 \nocite{*}
 
 % The \appendix statement indicates the beginning of the appendices.
-%\appendix
+\appendix
 % Add a title page before the appendices and a line in the Table of Contents
-%\chapter*{APPENDICES}
-%\addcontentsline{toc}{chapter}{APPENDICES}
+\chapter*{APPENDICES}
+\addcontentsline{toc}{chapter}{APPENDICES}
 %======================================================================
-%\chapter[PDF Plots From Matlab]{Matlab Code for Making a PDF Plot}
-%\label{AppendixA}
+\chapter{Artifacts}
+\label{AppendixA}
 % Tip 4: Example of how to get a shorter chapter title for the Table of Contents 
 %======================================================================
 %\section{Using the GUI}

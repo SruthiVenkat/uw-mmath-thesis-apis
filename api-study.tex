@@ -57,7 +57,7 @@ have evidence that the actual API surface includes classes
 
 We now describe the implementation of our tool and our benchmark selection process.
 
-\subsection{Static Analysis And Instrumentation}
+\subsection{Static Analysis and Instrumentation}
 \label{sec:methodology}
 
 We use Javassist~\cite{chiba00:_load_struc_reflec_java} and perform class hierarchy analysis on clients
@@ -341,7 +341,7 @@ Upon a breaking upgrade, a vanilla API usage will fail to compile. Reflection is
 
 Dynamic techniques like reflection in data binding and persistence mapping pose additional perils. Even minor changes to classes can render data produced with previous versions un-readable. Adding, removing or modifying a field in a class mapped to a relational database table requires altering the table and migrating data. Adding a custom constructor (and thereby removing the default constructor) or removing a setter method may derail a deserialization mechanism based on the Java bean model (e.g. \texttt{java.bean.XMLDecoder}). Binary serialization has long suffered from this problem. 
 
-\subsection{Restricting API surfaces: Services, package names, and package exports}
+\subsection{Restricting API surfaces: Services, Package Names and Package Exports}
 We mentioned that reflective instantiations of \texttt{Driver}s were recommended prior to JDBC 4. Post-JDBC 4, the recommendation is now to use the service loading mechanism to further reduce dependencies of clients on particular drivers. Specifically, the client is to use the \texttt{DriverManager} abstraction, which allows multiple drivers to bid on establishing a connection for a given database URL. (The client does not use the service loader directly.) 
 
 \lstinputlisting[language=Java,caption={\tt Driver} instantiation through a service loader,label=listing:service-loader]{code-snippets/service-loader.java}
@@ -502,7 +502,7 @@ Table~\ref{tab:refl-callbacks} shows the reflective callback API usage pattern. 
 
 
 %\input{tables/results/reflective-invocations-client-to-lib}
-\input{tables/results/reflective-callbacks}
+
 
 %% facts about methods:
 %% # 827
@@ -515,10 +515,10 @@ Table~\ref{tab:refl-callbacks} shows the reflective callback API usage pattern. 
 %% Similarly, \texttt{setAccessible()} on methods in \emph{fastjson} at the behest of \emph{rocketmq} is on constructors, factory methods, and build methods, in the context of Java Beans. As with the fields, these calls essentially enable serialization and deserialization, and are made from class JavaBeanDeserializer.
 
 %% \todo[inline]{Our hypothesis: setAccessible() on methods is used almost exclusively in tests and in serialization. We can verify this by filtering the setAccessible() method calls and excluding everything with ``Test'' and ``Bean'' in it.}
-
+\input{tables/results/reflective-callbacks}
 
 \paragraph{Containers, modules, and modularity conventions}
-For OSGi, none of our libraries are used by our clients in the context of OSGi containers, so the clients are free to violate OSGi access control. Our results show that, even though they can, they almost universally do not. The sole exception is a pair of calls from client \texttt{xsoup} to internal class \texttt{StringUtil} of library \texttt{jsoup}; the calling class in \texttt{xsoup} was copied from \texttt{jsoup} and still uses its internal helper functions. These calls violate both modularity conventions and OSGi export declarations. When we found these calls, we submitted a pull request\footnote{Link omitted for double-blind review.} duplicating the \texttt{jsoup} methods into \texttt{xsoup}, and it was quickly merged, showing that the \texttt{xsoup} developer was not in favour of violating modularity conventions.
+For OSGi, none of our libraries are used by our clients in the context of OSGi containers, so the clients are free to violate OSGi access control. Our results show that, even though they can, they almost universally do not. The sole exception is a pair of calls from client \texttt{xsoup} to internal class \texttt{StringUtil} of library \texttt{jsoup}; the calling class in \texttt{xsoup} was copied from \texttt{jsoup} and still uses its internal helper functions. These calls violate both modularity conventions and OSGi export declarations. When we found these calls, we submitted a pull request\footnote{https://github.com/code4craft/xsoup/pull/53} duplicating the \texttt{jsoup} methods into \texttt{xsoup}, and it was quickly merged, showing that the \texttt{xsoup} developer was not in favour of violating modularity conventions.
 % https://github.com/code4craft/xsoup/pull/53
 
 Similarly, although we have Java 8 clients which can violate the unenforced module export rules of Java 9 libraries (they run in environments that don't enforce the rules), none of the clients do so. We believe that the most likely explanation is that such modularity violations are uncommon; however, it is also possible that Java 9 module definitions are too permissive and do not prevent calls that should be prevented.
@@ -538,5 +538,110 @@ internals in the \emph{rest-assured} code.
 \input{tables/results/internal}
 
 
+\paragraph{Service bypasses}
+We find that all clients of libraries that use service loaders bypass the defined services. This is done most commonly through instantiation, but also through casts, subtyping and reflection.
+
+For instance, component \emph{com.h2database:h2} advertises a service (\texttt{org.h2.Driver} implementing \texttt{java.sql.Driver}), making it a JDBC4-compliant driver. Its clients can obtain connections through the JDBC driver manager, which selects and instantiates instances based on driver URLs. However, client \texttt{glowroot.agent} (specifically class \texttt{org.glowroot.\-agent.embedded.util.DataSource}) directly instantiates \texttt{org.h2.jdbc.JdbcConnection} and therefore becomes dependent on using the particular database \emph{h2}. This leads to further direct calls to \texttt{org.h2.jdbc} APIs being observed. This is a clear bypass of a defined API. 
+
+Now consider \emph{fastjson}. This component declares that it provides several services, including three services defined by interfaces in the \texttt{javax.ws.rs.ext} package, part of the JEE support for RESTful services. 
+The respective services are implemented in classes in the package \texttt{com.alibaba.fastjson.support.jaxrs}.   
+However, looking at clients, we also see calls to APIs provided in \emph{fastjson} APIs outside packages implementing the interfaces declared as services. For instance, \texttt{com.alibaba.fastjson.JSON::toJSONString} is called from \texttt{org.springframework:spring-web}.
+%:4.3.7.RELEASE.    
+This is a legitimate use of a JSON parser via a non-standard API, and in this sense, it is a false positive as we detect it as a API misuse. So \emph{fastjson} could be easily split into two components, one providing an ``open API'' for the JSON parser functionality, and one implementing and providing the RESTful services. The services would then depend on the open API. This would significantly reduce the overall API surface of fastjson, splitting it into two components, each with well defined functionalities and internal coherence.
+
+We have mainly focussed on ``why not'', i.e. what mechanisms clients use to bypass API restrictions: reflection, violating conventions, and service loader bypasses, and reported results with respect to ``what thing''. When relevant, we discussed ``how'' the bypass occurred, especially for reflection, and we reported the directionality of the bypasses.
+
+\begin{mdframed}[
+  leftmargin=\parindent,
+  rightmargin=\parindent,
+  skipabove=\topsep,
+  skipbelow=\topsep
+  ]
+{\bf Finding 1:} Programs are generally well-behaved: reflection is mostly used for serialization not API bypasses; OSGi and Java 9 module definitions are always respected; internal packages are only called sparingly; but service loaders are almost always bypassed.
+\end{mdframed}
+
+\subsection{Extent of API usage}
+Continuing with our investigation of API surfaces, but moving from
+mis-uses to uses, we present results on API use.
+%, again using results obtained from our instrumentation.
+
+Table~\ref{tab:usage-distribution} presents the usage distribution of
+libraries' API elements (methods, fields, and classes subtyped) as
+covered by client tests. The ``total in library'' refers to the number of
+public and protected members, including static ones. To calculate these totals,
+we use the latest stable version of each library and consider it to be representative of 
+the versions used by clients.  The ``distinct used'' column counts an
+element once regardless of how many clients use that element, while
+``total used'' counts an element once per client using it. We identify method calls by the
+declared type of the receiver object, e.g. calls to {\tt o1.f()} and {\tt o2.f()} are the same
+if {\tt o1} and {\tt o2} have the same declared type.
+Our uses 
+include both vanilla and reflective uses of API elements.
+\input{tables/results/standard-api-usage}
+
+We can observe that at most 32\% (and on average 6\%) of the methods in the API surface
+are used by clients, with \emph{slf4j-api} having the highest use proportion.
+% , and sometimes less than 1\%  of methods. 
+Table~\ref{tab:usage-distribution} suggests that there is a small overlap between methods
+used by clients.
+
+We also looked at the \emph{json} library and found that its own tests reach 151
+of the 258 API methods, compared to the 25 methods used by our selected
+clients. One possible reason for the sparsity of API use is that, at least in \emph{json}, over half of the API methods are overloaded, i.e. share a name with
+some other API method.
 
 
+% reads or writes would be nice to know, but we can't get it in time.
+Despite standard OO practices calling for fields to be encapsulated, more than half of the libraries have their fields accessed by clients. Only 1 of the \emph{joda-time} and 25 of the \emph{jackson-core} fields are static (so it's not just constants); the rest of the accesses are to instance fields.
+However, the number of fields used is often in the single digits,
+the \emph{jackson} libraries being an exception with about 10\% of declared fields used.
+About half of the libraries have clients subclassing a
+single-digit number of library types, again with the exception of
+\emph{jackson} with dozens of subtypes in clients.
+
+
+Figure~\ref{fig:jaccard} presents a boxplot of
+pairwise Jaccard similarities between the portion of
+the APIs used by different clients for each library. Two clients $u_1$ and $u_2$ 
+of library $L$ which use exactly the same parts of $L$'s API would result in a similarity of 1;
+more generally, it is
+\[ \frac{|\mbox{used.API}_L(u_1) \cap \mbox{used.API}_L(u_2)|}{|\mbox{used.API}_L(u_1) \cup \mbox{used.API}_L(u_2)|}. \]
+Although Table~\ref{tab:usage-distribution} showed that some of the members overlap, we can
+see from this Figure that the overall level of overlap is generally less than 10\%. We observe
+a half-dozen client pairs (data points) where there is about 50\% overlap between client API uses, including for \emph{fastjson},
+\emph{commons-io}, and \emph{json}. Although the mean overlap for \emph{slf4j-api} is near 0, there are also 4 pairs of clients which have more than 50\% overlap.
+
+\begin{center}
+\begin{figure}
+\centering
+\includegraphics[width=8cm, height=7cm]{./images/jac-sim-box-plot-declared}
+\caption{\label{fig:jaccard}Jaccard similarities between clients' API usages}
+\end{figure}
+\end{center}
+%% Digging into \emph{fastjson}, we found that it is a ``mixed type'' library: some clients use APIs related
+%% to \texttt{javax.ws.rs}, the JEE standard for restful services, while others use just a standalone parser API that does not implement an external specification. 
+
+
+We were not surprised by the generally small amounts of overlap, because the libraries' exposed API surfaces tended
+to have thousands of exposed elements and hundreds of used elements. Recall also our earlier discussion about \emph{fastjson} and how it could be fissioned into modules. Generally, across our benchmarks, small number of members are used by
+multiple clients, but many others are used only once.
+
+Table~\ref{tab:same-method} presents another view of API overlap between clients. We constructed the largest set
+of methods shared by more than 1 client of a library (``max-set'') and report the size of that set as well as the percentage
+of clients which use all of that set of methods. So, for \emph{gson}, we can see that there is one method shared
+by all 4 clients, and no set of 2 methods shared by 2 clients. Interestingly, then, \emph{jackson-databind} has a core of 5
+methods which are all used by 20\% (3) of its clients. We characterize the amount of overlap as generally low but not
+nonexistent: a few methods are repeatedly used.
+
+\input{tables/results/perc-clients-same-methods}
+
+%{\bf Research Question 2.} (a) Do clients often use only a subset of the published API? How big is this subset? (b) For each library, is that subset consistent across clients? (c) Do different libraries show different usage patterns by clients?
+
+\begin{mdframed}[
+  leftmargin=\parindent,
+  rightmargin=\parindent,
+  skipabove=\topsep,
+  skipbelow=\topsep
+  ]
+{\bf Finding 2:} APIs are sparsely used by clients---mostly methods (6\% utilization), but a few fields (3\%) and supertypes (6\%). There is limited but nonzero overlap between the methods used by different clients.
+\end{mdframed}
