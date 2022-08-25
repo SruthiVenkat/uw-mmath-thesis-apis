@@ -84,7 +84,7 @@
 \setboolean{PrintVersion}{false} 
 % CHANGE THIS VALUE TO "true" as necessary, to improve printed results for hard copies
 % by overriding some options of the hyperref package below.
-
+\usepackage{listings}
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{subfig}
@@ -102,6 +102,14 @@
 \usetikzlibrary{positioning}
 \usetikzlibrary{fit}
 \usetikzlibrary{shapes.geometric}
+
+\usepackage{multicol}
+\usepackage{colortbl}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+\definecolor{verylightgray}{gray}{0.7}
+
+
 
 %\usepackage{nomencl} % For a nomenclature (optional; available from ctan.org)
 \usepackage{amsmath,amssymb,amstext} % Lots of math symbols and environments
@@ -141,7 +149,7 @@
     urlcolor=black}
 }{} % end of ifthenelse (no else)
 
-\usepackage[automake,toc,abbreviations]{glossaries-extra} % Exception to the rule of hyperref being the last add-on package
+%\usepackage[automake,toc,abbreviations]{glossaries-extra} % Exception to the rule of hyperref being the last add-on package
 % If glossaries-extra is not in your LaTeX distribution, get it from CTAN (http://ctan.org/pkg/glossaries-extra), 
 % although it's supposed to be in both the TeX Live and MikTeX distributions. There are also documentation and 
 % installation instructions there.
@@ -187,40 +195,6 @@
 \newcommand{\clearemptydoublepage}{%
   \clearpage{\pagestyle{empty}\origdoublepage}}
 \let\cleardoublepage\clearemptydoublepage
-
-% Define Glossary terms (This is properly done here, in the preamble. Could be \input{} from a file...)
-% Main glossary entries -- definitions of relevant terminology
-\newglossaryentry{computer}
-{
-name=computer,
-description={A programmable machine that receives input data,
-               stores and manipulates the data, and provides
-               formatted output}
-}
-
-% Nomenclature glossary entries -- New definitions, or unusual terminology
-\newglossary*{nomenclature}{Nomenclature}
-\newglossaryentry{dingledorf}
-{
-type=nomenclature,
-name=dingledorf,
-description={A person of supposed average intelligence who makes incredibly brainless misjudgments}
-}
-
-% List of Abbreviations (abbreviations type is built in to the glossaries-extra package)
-\newabbreviation{aaaaz}{AAAAZ}{American Association of Amature Astronomers and Zoologists}
-
-% List of Symbols
-\newglossary*{symbols}{List of Symbols}
-\newglossaryentry{rvec}
-{
-name={$\mathbf{v}$},
-sort={label},
-type=symbols,
-description={Random vector: a location in n-dimensional Cartesian space, where each dimensional component is determined by a random process}
-}
- 
-\makeglossaries
 
 %======================================================================
 %   L O G I C A L    D O C U M E N T -- the content of your thesis
@@ -292,36 +266,36 @@ description={Random vector: a location in n-dimensional Cartesian space, where e
 \nocite{*}
 
 % The \appendix statement indicates the beginning of the appendices.
-\appendix
+%\appendix
 % Add a title page before the appendices and a line in the Table of Contents
-\chapter*{APPENDICES}
-\addcontentsline{toc}{chapter}{APPENDICES}
+%\chapter*{APPENDICES}
+%\addcontentsline{toc}{chapter}{APPENDICES}
 %======================================================================
-\chapter[PDF Plots From Matlab]{Matlab Code for Making a PDF Plot}
-\label{AppendixA}
+%\chapter[PDF Plots From Matlab]{Matlab Code for Making a PDF Plot}
+%\label{AppendixA}
 % Tip 4: Example of how to get a shorter chapter title for the Table of Contents 
 %======================================================================
-\section{Using the GUI}
-Properties of Matab plots can be adjusted from the plot window via a graphical interface. Under the Desktop menu in the Figure window, select the Property Editor. You may also want to check the Plot Browser and Figure Palette for more tools. To adjust properties of the axes, look under the Edit menu and select Axes Properties.
-
-To set the figure size and to save as PDF or other file formats, click the Export Setup button in the figure Property Editor.
-
-\section{From the Command Line} 
-All figure properties can also be manipulated from the command line. Here's an example: 
-\begin{verbatim}
-x=[0:0.1:pi];
-hold on % Plot multiple traces on one figure
-plot(x,sin(x))
-plot(x,cos(x),'--r')
-plot(x,tan(x),'.-g')
-title('Some Trig Functions Over 0 to \pi') % Note LaTeX markup!
-legend('{\it sin}(x)','{\it cos}(x)','{\it tan}(x)')
-hold off
-set(gca,'Ylim',[-3 3]) % Adjust Y limits of "current axes"
-set(gcf,'Units','inches') % Set figure size units of "current figure"
-set(gcf,'Position',[0,0,6,4]) % Set figure width (6 in.) and height (4 in.)
-cd n:\thesis\plots % Select where to save
-print -dpdf plot.pdf % Save as PDF
-\end{verbatim}
+%\section{Using the GUI}
+%Properties of Matab plots can be adjusted from the plot window via a graphical interface. Under the Desktop menu in the Figure window, select the Property Editor. You may also want to check the Plot Browser and Figure Palette for more tools. To adjust properties of the axes, look under the Edit menu and select Axes Properties.
+%
+%To set the figure size and to save as PDF or other file formats, click the Export Setup button in the figure Property Editor.
+%
+%\section{From the Command Line} 
+%All figure properties can also be manipulated from the command line. Here's an example: 
+%\begin{verbatim}
+%x=[0:0.1:pi];
+%hold on % Plot multiple traces on one figure
+%plot(x,sin(x))
+%plot(x,cos(x),'--r')
+%plot(x,tan(x),'.-g')
+%title('Some Trig Functions Over 0 to \pi') % Note LaTeX markup!
+%legend('{\it sin}(x)','{\it cos}(x)','{\it tan}(x)')
+%hold off
+%set(gca,'Ylim',[-3 3]) % Adjust Y limits of "current axes"
+%set(gcf,'Units','inches') % Set figure size units of "current figure"
+%set(gcf,'Position',[0,0,6,4]) % Set figure width (6 in.) and height (4 in.)
+%cd n:\thesis\plots % Select where to save
+%print -dpdf plot.pdf % Save as PDF
+%\end{verbatim}
 
 \end{document}

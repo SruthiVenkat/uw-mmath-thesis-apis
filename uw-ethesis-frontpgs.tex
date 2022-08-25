@@ -38,7 +38,7 @@
 
         \vspace*{2.0cm}
 
-        Waterloo, Ontario, Canada, 2017 \\
+        Waterloo, Ontario, Canada, 2022 \\
 
         \vspace*{1.0cm}
 
@@ -73,7 +73,7 @@ I understand that my thesis may be made electronically available to the public.
 
 \begin{center}\textbf{Abstract}\end{center}
 
-Software projects make use of libraries extensively. Libraries have intended API surfaces—sets of exposed library interfaces that library developers expect clients to use. However, in practice, clients only use small fractions of intended API surfaces of libraries. Clients also use libraries in unexpected ways sometimes. Understanding usage patterns of library APIs by clients is beneficial to both client and library developers—applications include version upgrades, breaking changes and software bloating. We have implemented a tool to study both static and dynamic interactions between clients, the libraries they use, and those libraries’ direct dependencies. We use this tool to carry out a detailed study of API usage patterns on 90 clients and 10 libraries. We then describe two additional developer-focussed applications of the data that our tool produces: a secondary visualization tool VizAPI, as well as the concept of library fission. VizAPI allows client developers to answer the following query about the interaction of their code and the libraries they depend on: Will my code be affected by breaking changes in library APIs? Additionally, library developers can find out about downstream code: which APIs in their source code are commonly used by clients? The concept of library fission, by which we mean the splitting of libraries into sub-modules, is based on the usage patterns that we observe. This can potentially help library developers release backward compatible versions of their libraries and client developers isolate breaking changes. 
+Software projects make use of libraries extensively. Libraries have intended API surfaces—sets of exposed library interfaces that library developers expect clients to use. However, in practice, clients only use small fractions of intended API surfaces of libraries. Clients also use libraries in unexpected ways sometimes. Understanding usage patterns of library APIs by clients is beneficial to both client and library developers—applications include version upgrades, breaking changes and software bloating. We have implemented a tool to study both static and dynamic interactions between clients, the libraries they use, and those libraries’ direct dependencies. We use this tool to carry out a detailed study of API usage patterns on 90 clients and 11 libraries. We then describe two additional developer-focussed applications of the data that our tool produces: a secondary visualization tool VizAPI, as well as the concept of library fission. VizAPI allows client developers to answer the following query about the interaction of their code and the libraries they depend on: Will my code be affected by breaking changes in library APIs? Additionally, library developers can find out about downstream code: which APIs in their source code are commonly used by clients? The concept of library fission, by which we mean the splitting of libraries into sub-modules, is based on the usage patterns that we observe. This can potentially help library developers release backward compatible versions of their libraries. It can help client developers isolate breaking changes and reduce the probability of vulnerabilities and version conflicts that may be introduced through direct or transitive dependencies. 
 
 \cleardoublepage
 
@@ -111,6 +111,13 @@ This thesis is dedicated to my family.
 % -----------------------------
 \addcontentsline{toc}{chapter}{List of Figures}
 \listoffigures
+\cleardoublepage
+\phantomsection		% allows hyperref to link to the correct page
+
+% L I S T   O F   L I S T I N G S
+% -----------------------------
+\addcontentsline{toc}{chapter}{List of Listings}
+\lstlistoflistings
 \cleardoublepage
 \phantomsection		% allows hyperref to link to the correct page
 

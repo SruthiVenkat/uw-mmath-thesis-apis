@@ -3,6 +3,14 @@
 %======================================================================
 \section{Visualization}
 \label{sec:visualization}
+We now present the VizAPI tool, which shows visualization overviews depicting API usages---from clients to libraries, but also between libraries (including transitive dependencies). The goal of VizAPI is to provide a heuristic for developers considering the impacts of changes to libraries.
+
+We have verified that each client uses only a small portion of each of its dependencies' API surfaces. Consider breaking changes again. GitHub provides the Dependabot tool~\cite{mullans20:_keep_depen}, which monitors for upstream changes and automatically proposes pull requests to update dependency versions. That tool may well pull in breaking changes. However, we hypothesize that, most of the time, most breaking changes will not affect most clients; it is useful for clients to know whether they are using the parts of the API surface that are subject to a particular breaking change. A client with broad dependencies on a library (uses a larger fraction of its API surface) is more likely to be affected by its changes than a client with narrow dependencies (smaller fraction). A narrow library dependency would also suggest that it would be easier to swap the library for a functionally similar replacement.
+
+Our visualization allows developers and
+researchers to visualize distribution information about how different
+parts of clients use different parts of libraries. VizAPI incorporates information from static and dynamic analyses. 
+We have made VizAPI publicly available\footnote{\url{https://github.com/SruthiVenkat/api-visualization-tool}}, although it is still in development.
 
 \begin{figure}[h]
 \begin{center}
@@ -12,34 +20,97 @@
 \end{center}
 \end{figure}
 
+We first define the terms ``client'', ``library'' and ``dependency''. A ``client'' is a software component which directly uses some functionality of an external component, which is the ``library''. Any external component that the ``library'' directly uses is a ``dependency''. 
 
 Figure~\ref{fig:example} illustrates a possible VizAPI usage scenario, from the perspective of a client developer. Consider a client $C$ (blue nodes) and a library $L$ (purple nodes), in the context of plain Java. Library $L$ has packages $L_1$, $L_2$, and $L_3$. $C$ calls into $L_1$ and $L_2$. Internally, within $L$, $L_1$ and $L_2$ call into each other, but not into $L_3$. The VizAPI result, with no edges from $C$ directly to $L_3$, allows a developer to conclude that breaking changes in $L_3$ will not affect $C$. Also, if only $L_3$ uses an external dependency $D$ (yellow node), then we know that $C$ will not need $D$ to be on its classpath.
 
-From the library developer side, under plain Java (i.e. no runtime containers) and considering reflection, the potential API surface of any component is huge. Essentially: every method can be called, and every field can be read and written. Even considering only the published API surface (methods, fields, classes, and annotations with the correct visibility modifiers), libraries' API surfaces still often have hundreds to thousands of members. The breadth of the API surface is a liability with respect to continued maintenance of the library; many developers aspire to avoid breaking changes by preserving, whenever possible, library behaviour that is depended on by clients. Knowing that few clients use a particular API would be valuable.
 
-On the other hand, we would expect (and have verified in other work) that each client uses only a small portion of each of its dependencies' API surfaces. Consider breaking changes again. GitHub provides the Dependabot tool~\cite{mullans20:_keep_depen}, which monitors for upstream changes and automatically proposes pull requests to update dependency versions. That tool may well pull in breaking changes. However, we hypothesize that, most of the time, most breaking changes will not affect most clients; it is useful for clients to know whether they are using the parts of the API surface that are subject to a particular breaking change. A client with broad dependencies on a library (uses a larger fraction of its API surface) is more likely to be affected by its changes than a client with narrow dependencies (smaller fraction). A narrow library dependency would also suggest that it would be easier to swap the library for a functionally similar replacement.
+We next describe the design of VizAPI, including how we
+collect information and format it for the d3js visualization
+library. We also present two VizAPI usage scenarios.
 
-Additionally, as researchers, we would like to understand how library
-APIs are used by clients more generally. Zhong and
-Mei~\cite{zhong19:_empir_study_api_usages} investigated API usages in
-a dataset of 7 experimental subjects (clients) and the libraries that
-they depend on.  They found that clients use less than 10\% of the
-declared APIs in libraries. Our visualization allows developers and
-researchers to visualize distribution information about how different
-parts of clients use different parts of libraries.
+\subsection{Visualization System}
+\label{subsec:vis-system}
 
-This paper presents the VizAPI tool, which shows visualization overviews showing API usages---from clients to libraries, but also between libraries (including transitive dependencies). VizAPI incorporates information from static and dynamic analyses. 
-We have made VizAPI publicly available, although it is still in development:
+Once we have generated data from our tool that runs the static and dynamic analyses, we use a modified version
+of the d3graph\footnote{\url{https://pypi.org/project/d3graph/}} library in Python to generate a d3js\footnote{\url{https://d3js.org/}}
+visualization. 
+The graph in Figure~\ref{fig:usagescenario1}
+is an example of a graph produced by VizAPI.
+
+VizAPI graphs are force-directed graphs based on the frequency of
+interactions between different software components.  Each node is a
+set of one or more packages that belong to the same JAR.  There are
+three categories of nodes: clients are represented by nodes with white
+interiors; libraries by nodes with filled interiors and black borders;
+and dependencies (called by libraries but not clients) by nodes with
+filled interiors and normal borders.  We coalesce nodes if they
+originate from the same JAR and have the same incoming and
+outgoing edges.
+
+Each edge is directed
+from the source package(s) to the target package(s) and represents an interaction 
+(invocations, fields, annotations, subtyping) between packages. 
+The thickness of each edge reflects the frequency of interactions between the source and the target.
+Double-clicking on a node emphasizes its direct interactions with other packages while fading out the rest of the graph.
+
+We run a Python implementation of the Louvain clustering algorithm~\cite{blondel2008fast}, and make the clusters 
+visible by colouring nodes based on cluster.
+This means that the same colour could indicate nodes (of the same category) from the same or different JARs.
+Hovering on a node shows the list of packages and 
+the JAR that they belong to, 
+formatted as “jar : $\langle$space separated list of packages$\rangle$”. 
+
+\begin{figure*}[h]
 \begin{center}
-\url{https://github.com/SruthiVenkat/api-visualization-tool}
+
+\subfloat[Usage Scenario 1: Library \textit{jsoup} (pink with dark borders), called by two clients, \textit{ez-vcard} (hollow with purple border) and \textit{JsoupXpath} (hollow with pink border). Exploration shows that internal jsoup packages aren't called directly by clients.
+\label{fig:usagescenario1}]
+{\includegraphics[width=16cm]{images/usage-scenario1.pdf}}
+\hspace{7mm}
+
+\subfloat[Usage Scenario 2: Client \textit{dataprocessor} (hollow, orange border) calls only one package in library \textit{fastjson} (green fill).
+\label{fig:usagescenario2}]
+{
+\makebox[16cm]{
+\includegraphics[width=11cm]{images/usage-scenario2.pdf}
+}
+}
+\caption{\label{fig:usagescenarios} VizAPI Usage Scenarios.}
+
 \end{center}
+\end{figure*}
 
-Our contributions include:
-\begin{itemize}
-\item an implementation of the VizAPI tool, which presents a visualization of API usage information; VizAPI collects static information and instruments Java code and collect dynamic instrumentation information about API uses in practice and presents it as a d3 visualization (Section~\ref{subsec:collecting-data}--\ref{subsec:vis-system});
-\item a discussion of VizAPI usage scenarios (Section~\ref{subsec:evaluation}) based on a collection of 11 libraries and 38 clients.
-\end{itemize}
 
+\subsection{Case Study}
+\label{subsec:evaluation}
+
+We conducted a pilot study of VizAPI.
+We have generated data from our benchmarks.
+We have collected both static and dynamic data for these projects, 
+and we are in a position
+to generate graphs for combinations of clients and libraries
+in these projects. 
+We present two usage scenarios below; graphs for 
+our usage scenarios are publicly available.\footnote{\url{https://sruthivenkat.github.io/VizAPI-graph/}}
+We intend for these usage scenarios to show how VizAPI can be useful to client developers when they want to observe library API usage and for library developers when they want to observe how their library is used by clients.
+
+\paragraph{Usage Scenario 1: jsoup}
+Imagine that we are a jsoup developer and want to understand
+how some clients interact with it, in anticipation of making some breaking changes. We choose clients JsoupXpath\footnote{\url{https://github.com/zhegexiaohuozi/JsoupXpath}\label{jsoupxpath}} and ez-vcard\footnote{\url{https://github.com/mangstadt/ez-vcard}\label{ez-vcard}}.
+Figure~\ref{fig:usagescenario1} shows static and dynamic interactions of the 2 clients with the jsoup\footnote{\url{https://github.com/jhy/jsoup}\label{jsoup}} library. Recall that nodes represent packages and edges represent interactions (usually invocations) between packages. 
+
+We can start our exploration with the cluster of pink nodes. Many of these nodes belong to either JsoupXpath or jsoup. Hovering over a node tells us the package names while double-clicking shows us its direct interactions. (To search for a package, we can click on ``show package names'' and use the browser's find functionality.) Here, client JsoupXpath calls directly into \texttt{org.jsoup.nodes} and \texttt{org.jsoup.select}. Notably, and as we might expect, we can see that \texttt{org.jsoup.helper} and \texttt{org.jsoup.internal} aren't called directly by JsoupXpath. This would mean that breaking changes in \texttt{org.jsoup.helper} or \texttt{org.jsoup.internal} wouldn't directly affect JsoupXpath\footnote{As a specific example, the retraction of an internal jsoup API would not break this client. Behavioural changes that are directly passed through to the external API, e.g. through delegation, can still break clients, but we can consider those to be changes in the external API.} 
+
+Similarly, ez-vcard, which belongs to the purple cluster in Figure~\ref{fig:usagescenario1}, directly calls into \texttt{org.jsoup}. ez-vcard also calls into jackson-core\footnote{\url{https://github.com/FasterXML/jackson-core}\label{jackson-core}} and jackson-databind\footnote{\url{https://github.com/FasterXML/jackson-databind}\label{jackson-databind}}, which are very tightly coupled amongst their own packages and with each other. As a jsoup developer, we would be indifferent; others, however, can observe that breaking changes in jackson-core and jackson-databind could propagate.
+
+\paragraph{Usage Scenario 2: dataprocessor}
+
+Figure~\ref{fig:usagescenario2} presents a second usage scenario. Here, say we are the developers of client dataprocessor\footnote{\url{https://github.com/dadiyang/dataprocessor}\label{dataprocessor}} (hollow with orange border). This client uses the fastjson\footnote{\url{https://github.com/alibaba/fastjson}\label{fastjson}} library (green fill). Our visualization shows calls only from dataprocessor package \texttt{com.github.dataprocessor.slice}, which is the orange-bordered client node (identity of the package available by hovering) to the package \texttt{com.alibaba.fastjson}. No other parts of dataprocessor use fastjson. This means that when we, as dataprocessor developers, need to upgrade the fastjson version, we only need to inspect the source code in our \texttt{com.github.dataprocessor.slice} package. 
+
+Note also the disconnected nodes in Figure~\ref{fig:usagescenario2}. These are all packages of fastjson that are not used by dataprocessor: any breaking changes in these packages definitely do not directly affect dataprocessor, and are less likely to affect it overall than packages that are directly used.
+
+We have presented a case study on possible usage scenarios for the VizAPI tool to show its usefulness to component developers and researchers.
 
 \section{Library Fission}
 Modern software uses libraries extensively, to reuse functionality. Over time, libraries tend to extend their functionality, introduce more features and modify existing ones. This could lead to huge library sizes, a lot of which goes unused by a client that imports it. This is called software bloating and there has been work around debloating. Debloating focuses on the client’s execution and analyzing the client. We propose library fission, which focuses on splitting libraries based on client usage. This is a more permanent solution to bloating and does not require running analyses on clients for every execution. (We aim to split libraries based on client behaviour in a way that sub-modules of the fissioned library have common functionality.)

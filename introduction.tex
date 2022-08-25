@@ -19,15 +19,24 @@ As a second problem, consider the detection of vulnerabilities in dependencies. 
 
 We study component usage and explore its usefulness in this work. Specifically, our research aims to explore the following questions: is the API surface huge in practice? How much of it is actually used and in what ways is it used? Ought we better control component use? What are some ways to do so? 
 
+We introduce VizAPI to help library developers, client developers and researchers to visually understand API usage. To mitigate the issue of huge API surfaces, we introduce the concept of library fission. By observing how clients use libraries in practice, we can propose splitting libraries into loosely confederated modules. Then, a client can depend on some subset of the library’s modules. This has implications both on safe upgrades and on security vulnerabilities. Upgrades are
+ safe if potentially-breaking changes are in unused components. And, security vulnerabilities in unused components are less likely to cause problems in their clients.
+
 \section{Contributions}
 \label{sec:contributions}
 
 The contributions of this work include:
 \begin{itemize}
 \item a tool to record both static and dynamic interactions between clients, the libraries they use, and those libraries’ direct dependencies
-\item a detailed empirical study of API usage patterns on 10 libraries and 90 clients 
+\item a detailed empirical study of API usage patterns on 11 libraries and 90 clients 
 \item VizAPI, a tool which presents visualization of API usage information
 \item a case study on the concept of library fission
 \end{itemize}
 
-Our tool collects static information and also instruments Java code to collect dynamic instrumentation data about API uses in practice. This includes different patterns of interactions across components, such as vanilla invocations, field usage, annotation usage, subtyping, dynamic proxies, reflective calls and service loaders. Using the tool's output, we empirically study how developers access libraries in practice, so that we (and others) can develop tools to help developers achieve more stability. We conduct our study on a corpus of 10 open-source libraries and 90 clients. Our visualization tool, VizAPI, presents this information about API uses in practice as a d3 visualization, which can be useful to component developers when they want to introspect about their software. We also apply the API usage information to explore the concept of library fission. We define library fission as splitting up a component into smaller sub-modules. The possible advantages of library fission includes lesser chances of breaking changes in clients of the library. It also means lesser chances of vulnerabilities and version conflicts introduced through dependencies.
+Our tool collects static information and also instruments Java code to collect dynamic instrumentation data about API uses in practice. This includes different patterns of interactions across components, such as vanilla invocations, field usage, annotation usage, subtyping, dynamic proxies, reflective calls and service loaders. 
+
+Using the tool's output, we empirically study how developers access libraries in practice, so that we (and others) can develop tools to help developers achieve more stability. We conduct our study on a corpus of 11 open-source libraries and 90 clients. We have generated API usage data for this corpus of 101 projects, which we have made publicly available. 
+
+Our visualization tool, VizAPI, presents this information about API uses in practice as a d3 visualization, which can be useful to component developers when they want to introspect about their software. 
+
+We also apply the API usage information to explore the concept of library fission. We define library fission as splitting up a component into smaller sub-modules. The possible advantages of library fission includes lesser chances of breaking changes in clients of the library, and lesser chances of vulnerabilities and version conflicts introduced through dependencies.

@@ -1,0 +1,51 @@
+\begin{table}[ht]
+\centering
+\caption{\label{tab:internal}Uses of .internal APIs externally}
+\begingroup\scriptsize
+\begin{tabular}{ll!{\color{verylightgray}\vrule}r}
+To & From & count \\ 
+ \arrayrulecolor{verylightgray}\hline
+fastjson	&jersey-common	&1\\
+netty-all	&rocketmq-remoting	&2\\
+netty-common	&lettuce-core	&2\\
+netty-common	&netty-buffer	&4\\
+netty-common	&netty-transport	&1\\
+json-path	&groovy	&13\\
+rest-assured	&groovy	&147\\
+rest-assured-common	&json-path	&2\\
+rest-assured-common	&rest-assured	&2\\
+rest-assured-common	&groovy	&15\\
+jasperreports	&ecj	&11\\
+rocketmq-remoting	&netty-all	&9\\
+ecj	&jasperreports	&6\\
+jersey-common	&fastjson	&1\\
+jersey-common	&hk2-utils	&2\\
+kotlin-stdlib	&okio	&3\\
+jsoup	& xsoup	&2\\
+mockito-core	&ognl	&1\\
+mockito-core	&spring-expression	&1\\
+mongo-java-driver	&fongo	&3\\
+\end{tabular}
+\endgroup
+\end{table}
+
+%% com.alibaba:fastjson	&org.glassfish.jersey.core:jersey-common	1\\
+%% io.netty:netty-all	&org.apache.rocketmq:rocketmq-remoting	2\\
+%% io.netty:netty-common	&io.lettuce:lettuce-core	2\\
+%% io.netty:netty-common	&io.netty:netty-buffer	4\\
+%% io.netty:netty-common	&io.netty:netty-transport	1\\
+%% io.rest-assured:json-path	&org.codehaus.groovy:groovy	13\\
+%% io.rest-assured:rest-assured	&org.codehaus.groovy:groovy	147\\
+%% io.rest-assured:rest-assured-common	&io.rest-assured:json-path	2\\
+%% io.rest-assured:rest-assured-common	&io.rest-assured:rest-assured	2\\
+%% io.rest-assured:rest-assured-common	&org.codehaus.groovy:groovy	15\\
+%% net.sf.jasperreports:jasperreports	&org.eclipse.jdt:ecj	11\\
+%% org.apache.rocketmq:rocketmq-remoting	&io.netty:netty-all	9\\
+%% org.eclipse.jdt:ecj	&net.sf.jasperreports:jasperreports	6\\
+%% org.glassfish.jersey.core:jersey-common	&com.alibaba:fastjson	1\\
+%% org.glassfish.jersey.core:jersey-common	&org.glassfish.hk2:hk2-utils	2\\
+%% org.jetbrains.kotlin:kotlin-stdlib	&com.squareup.okio:okio	3\\
+%% org.jsoup:jsoup	& us.codecraft:xsoup	2\\
+%% org.mockito:mockito-core	&ognl:ognl	1\\
+%% org.mockito:mockito-core	&org.springframework:spring-expression	1\\
+%% org.mongodb:mongo-java-driver	&com.github.fakemongo:fongo	3\\
