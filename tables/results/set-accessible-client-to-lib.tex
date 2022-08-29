@@ -3,10 +3,9 @@
 \begin{table}[ht]
 \centering
 \begingroup\small
-\begin{tabular}{llllr}
-  \hline
+\begin{tabular}{ll!{\color{verylightgray}\vrule}rr!{\color{verylightgray}\vrule}r}
 Library & Client & Member & Visibility & Count \\ 
-  \hline
+   \arrayrulecolor{verylightgray}\hline
 libthrift & benchmark-thrift & Field & private & 1 \\ 
   spring-context & fastjson & Constructor & private & 1 \\ 
   javax.servlet-api & fastjson & Field & private & 9 \\ 
@@ -17,7 +16,6 @@ libthrift & benchmark-thrift & Field & private & 1 \\
   spring-web & fastjson & Method & public & 3 \\ 
   jsoup & JsoupXpath & Method & protected & 1 \\ 
   rocketmq-common & rocketmq-acl & Field & private & 7 \\ 
-   \hline
 \end{tabular}
 \endgroup
 \caption{\label{tab:set-accessible-client-to-lib}setAccessible Calls---Client to Library} 

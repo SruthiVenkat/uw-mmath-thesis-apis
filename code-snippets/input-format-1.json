@@ -1,0 +1,4 @@
+[{
+  "artifact": artifact ID of project,
+  "type": "client" or "library"
+}]

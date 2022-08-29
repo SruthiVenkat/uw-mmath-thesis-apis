@@ -2,11 +2,9 @@
 % Wed Aug 24 19:50:29 2022
 \begin{table}[ht]
 \centering
-\begingroup\scriptsize
-\begin{tabular}{llrrrrr}
-  \hline
+\begin{tabular}{ll!{\color{verylightgray}\vrule}rrrr!{\color{verylightgray}\vrule}r}
 Library & Client & default & private & protected & public & total \\ 
-  \hline
+  \arrayrulecolor{verylightgray}\hline
 mirror & vraptor & 0 & 0 & 0 & 1 & 1 \\ 
   jboss-el-api\_3.0\_spec & vraptor & 0 & 0 & 0 & 4 & 4 \\ 
   dble & dble & 0 & 0 & 0 & 11 & 11 \\ 
@@ -38,8 +36,6 @@ mirror & vraptor & 0 & 0 & 0 & 1 & 1 \\
   jmustache & swagger-codegen & 0 & 0 & 0 & 1 & 1 \\ 
   fastjson & rocketmq-* & 0 & 0 & 0 & 232 & 232 \\ 
   netty-all & rocketmq-remoting & 0 & 0 & 0 & 4 & 4 \\ 
-   \hline
 \end{tabular}
-\endgroup
 \caption{\label{tab:refl-callbacks}Reflective Callbacks} 
 \end{table}

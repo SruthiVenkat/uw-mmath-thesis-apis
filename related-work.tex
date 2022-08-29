@@ -2,7 +2,10 @@
 \chapter{Related Work}
 \label{sec:related}
 %======================================================================
+We now discuss related work, which is divided into three sections. Section~\ref{sec:related-api} presents work related to API usage while Sections~\ref{sec:related-fission} and \ref{sec:related-vizapi} present work related to our two applications; library fission and the VizAPI visualization tool respectively.
 
+\section{API Usage}
+\label{sec:related-api}
 This work revolves around the usage of library APIs by clients. There is a large body of work investigating API usages. Mining API specifications was first introduced by Ammons et al~\cite{AmmonsETAL02MiningSpecifications}. In their work, frequent interaction patterns are obtained from program execution. More closely related to our present work is that by Zhong and Mei~\cite{zhong19:_empir_study_api_usages}, who have investigated API usages in a dataset of 7 experimental subjects and the libraries that they depend on. Some of those findings are relevant to us: they find that clients use less than 10\% of the declared APIs in libraries. Our results corroborate these findings. Our work differs from ~\cite{zhong19:_empir_study_api_usages} in that we are specifically not investigating sequencing relationships between API calls. Saied et al~\cite{saied15:_minin_multi_api_usage_patter} studied which API calls tended to co-occur in client code and inferred co-usage relationships between these calls. Our work goes beyond previous work by investigating not only which \emph{intended} APIs get used but also APIs which are not declared to be part of the interface but are used in practice. We record different types of usage patterns, which we explain further in Chapter \ref{sec:apiusage}.
 
 Thummalapenta and Xie~\cite{thummalapenta08:_spotw} presented the related SpotWeb tool, which identifies framework hotspots (APIs that are often used) and coldspots (APIs that are never used); they do not consider framework APIs that are used but not intended to be. Hotspots and coldspots are, however, related to our investigations about client use of APIs; part of our study could be seen as investigating the prevalence of hotspots on our benchmark suite. Their notion of API usage is similar to ours, but they perform a static search to identify uses, while we statically record uses but also dynamically record test executions. They also identify the top $N$ percent of used APIs as hotspots, and unused APIs as coldspots. Viljamaa~\cite{viljamaa03:_rever_engin_framew_reuse_inter} also aimed to find hotspots but used concept analysis to do so.
@@ -14,9 +17,13 @@ On the subject of API evolution, Yasmin et al~\cite{yasmin20:_first_look_deprec_
 Our study of API usage patterns includes investigating API bypasses. Dynamic language features are one way to bypass protections,
 and Dietrich et al~\cite{dietrich2017xcorpus} explored the extent of their use in the significant XCorpus. A related bypass technique
 is unsafe Java (especially used for performance), and Mastrangelo et al~\cite{mastrangelo15:_use_your_own_risk} characterized the
-use of unsafe Java in their benchmark suite.
+use of unsafe Java in their benchmark suite. Amann et al ~\cite{amann2018systematic} perform an evaluation of API mis-use detectors and provide a classification of API mis-uses in their work. However, they focus on misuses that result in exceptions while we focus on mis-uses that are unexpected but do not lead to any errors or exceptions.
 
+\section{Our Applications}
 Our goal is to investigate client uses of library code, targetting two applications: the VizAPI visualization tool and library fission. Our results can help both client and library developers. Clients benefit from sharpened warnings about unsafe upgrades, knowledge that some upgrades are safe, and having reduced attack surfaces. Library upgrades have been investigated by many researchers, including Lam et al~\cite{lam20:_puttin_seman_seman_version} and Kura et al~\cite{kula18:_do_devel_updat_their_librar_depen}. Kura et al found that most software had outdated dependencies, and that software developers had negative feelings about being required to constantly upgrade their libraries. Foo et al~\cite{foo18:_effic_static_check_librar_updat} proposed a static analysis which detected safe upgrades, but could only certify safety for 10\% of upgrades. Our combined static and dynamic approach presents the developer with more information. The applications of this information---the VizAPI visualization tool and library fission enables easier upgrades. From the library side, library fission can help with maintainability---smaller libraries can be released with fewer worries about downstream effects.
+
+\subsection{Library Fission}
+\label{sec:related-fission}
 
 The related notion of ``tree-shaking'' has been well-known since at least the 1990s, and recently rebranded as ``debloating''.
 The Jax project by Tip et al~\cite{tip02:_pract_extrac_techn_java} was early work on debloating in the Java space.
@@ -32,6 +39,9 @@ Hejderup and Gousios~\cite{DBLP:journals/jss/HejderupG22} explore a question whi
 % https://softwareengineering.stackexchange.com/questions/297276/what-is-a-shaded-java-dependency
 
 Shah et al~\cite{shah13:_autom_depen_break_refac_java} present refactorings which enable dependency breaking. In our work, we instead use dynamic and static data to investigate library fission and enable clients to depend on the same libraries as before, but less of them, using techniques that are similar to library shading. The difference is that we create versions of libraries that are smaller, not simply renamed.
+
+\subsection{VizAPI}
+\label{sec:related-vizapi}
 
 We now discuss existing work related to VizAPI, our visualization tool.
 A representative tool from the software visualization literature is

@@ -3,10 +3,9 @@
 \begin{table}[ht]
 \centering
 \begingroup\small
-\begin{tabular}{llrrrrr}
-  \hline
+\begin{tabular}{ll!{\color{verylightgray}\vrule}rrrr!{\color{verylightgray}\vrule}r}
 Library & Client & default & private & protected & public & total \\ 
-  \hline
+  \arrayrulecolor{verylightgray}\hline
 vraptor & mirror & 0 & 1 & 0 & 0 & 1 \\ 
   dble & gson & 0 & 0 & 12 & 0 & 12 \\ 
   capitalone.dashboard:core & jackson-databind & 0 & 26 & 0 & 0 & 26 \\ 
@@ -16,7 +15,7 @@ vraptor & mirror & 0 & 1 & 0 & 0 & 1 \\
   capitalone.dashboard:core & spring-beans & 1 & 21 & 0 & 0 & 22 \\ 
   capitalone.dashboard:core & spring-core & 2 & 157 & 0 & 0 & 159 \\ 
   benchmark-thrift & jcommander & 0 & 5 & 0 & 0 & 5 \\ 
-  pagehelper-spring-boot-autoconfigure & spring-beans & 0 & 2 & 0 & 0 & 2 \\ 
+  pagehelper-\ldots-autoconfigure & spring-beans & 0 & 2 & 0 & 0 & 2 \\ 
   MultiChainJavaAPI & gson & 21 & 0 & 0 & 0 & 21 \\ 
   motan-core & hessian & 0 & 0 & 2 & 0 & 2 \\ 
   crushpaper & hibernate-core & 0 & 33 & 0 & 0 & 33 \\ 
@@ -36,7 +35,6 @@ vraptor & mirror & 0 & 1 & 0 & 0 & 1 \\
   mybatis & pagehelper & 0 & 1 & 0 & 0 & 1 \\ 
   thymeleaf & ognl & 0 & 0 & 0 & 1 & 1 \\ 
   thymeleaf & spring-expression & 0 & 0 & 0 & 1 & 1 \\ 
-     \hline
 \end{tabular}
 \endgroup
 \caption{\label{tab:refl-fields}Reflection on fields} 

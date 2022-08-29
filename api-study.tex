@@ -186,9 +186,9 @@ instantiations and casts.
 \subsection{Benchmark Selection}
 \label{sec:benchmark}
 Our benchmark set consists of 11 libraries and 90 clients. For libraries, we pick the most popular Maven 
-repositories in different categories such as logging, json parsing and databases. Table~\ref{tab:libs} presents our set of libraries. We measured lines of code (kLOC) using SLOCcount\footnote{\url{https://dwheeler.com/sloccount/}} and number of classes by building libraries and counting resulting \texttt{.class}es. A project uses ServiceLoaders if it has a \texttt{META-INF/services} directory and Java 9 modules if it has a \texttt{module-info.java} file. A library is an OSGi component if it contains a \texttt{MANIFEST.MF} file in its build output\footnote{Some libraries (e.g. \emph{connector-j}) create OSGi metadata during the build, so we look for the metadata in the output, not in the source.}, and this manifest contains \texttt{Export-Package} declarations. 
+repositories in different categories such as logging, json parsing and databases. Table~\ref{tab:libs} presents our set of libraries. We measured lines of code (kLOC) using SLOCcount\footnote{\url{https://dwheeler.com/sloccount/}} and number of classes by building libraries and counting resulting \texttt{.class}es. A project uses ServiceLoaders if it has a \texttt{META-INF/services} directory and Java 9 modules if it has a \texttt{module-info.java} file. A library is an OSGi component if it contains a \texttt{MANIFEST.MF} file in its build output\footnote{Some libraries (for example, \emph{connector-j}) create OSGi metadata during the build, so we look for the metadata in the output, not in the source.}, and this manifest contains \texttt{Export-Package} declarations. 
 
-\begin{table*}[ht]
+\begin{table}[h]
 \begin{center}
 \caption{\label{tab:libs}Libraries that we investigated for API usage and mis-usage patterns}
 \begingroup\scriptsize	
@@ -210,7 +210,7 @@ h2 & 1.4.200 & database & 147.2 & 1010 & \checkmark & & \checkmark \\
 \end{tabular}
 \endgroup
 \end{center}
-\end{table*}
+\end{table}
 
 We use the libraries.io dataset\footnote{\url{https://libraries.io/}} to construct a dependency graph and look for the most used upstream components (highest number of other components depends on [any version of] those), 
 and the top downstream components (clients). We exclude any clients that have less than 10 stars or less than 10 forks on Github.  Apart from this, we also pick a subset of projects from the
@@ -245,7 +245,7 @@ We now present a conceptual framework that outlines four dimensions along which 
 % we are using a runtime definition of virtual here: even if the call is declared virtual, we're calling it direct if declared target = actual target
     \item reflection/unsafe: user creates a handle to thing being accessed and uses that handle to perform the access;
 % Mastrangelo says that, for our context, unsafe is used for serialization/deserialization, as sort of a super reflection.
-    \item advanced dynamic: none of the above---user accesses thing in some other way, e.g. via proxies.% or runtime code generation.
+    \item advanced dynamic: none of the above---user accesses thing in some other way, for example, via proxies.% or runtime code generation.
 \end{itemize}
 \item \emph{Which way} is the access going?
 \begin{itemize}
@@ -339,14 +339,14 @@ At this stage, we'd like to reiterate our goal in investigating API accesses. We
 
 Upon a breaking upgrade, a vanilla API usage will fail to compile. Reflection is more dynamic---developers have the power to query the system and to adapt to the actual versions of the components that they are interacting with. If they use this power, then their code can be more resilient. However, failures that do arise can be more subtle and severe. The same phenomenon is present in Rinard's acceptability-oriented computing~\cite{rinard03:_accep}.
 
-Dynamic techniques like reflection in data binding and persistence mapping pose additional perils. Even minor changes to classes can render data produced with previous versions un-readable. Adding, removing or modifying a field in a class mapped to a relational database table requires altering the table and migrating data. Adding a custom constructor (and thereby removing the default constructor) or removing a setter method may derail a deserialization mechanism based on the Java bean model (e.g. \texttt{java.bean.XMLDecoder}). Binary serialization has long suffered from this problem. 
+Dynamic techniques like reflection in data binding and persistence mapping pose additional perils. Even minor changes to classes can render data produced with previous versions un-readable. Adding, removing or modifying a field in a class mapped to a relational database table requires altering the table and migrating data. Adding a custom constructor (and thereby removing the default constructor) or removing a setter method may derail a deserialization mechanism based on the Java bean model (for example, \texttt{java.bean.XMLDecoder}). Binary serialization has long suffered from this problem. 
 
 \subsection{Restricting API surfaces: Services, Package Names and Package Exports}
 We mentioned that reflective instantiations of \texttt{Driver}s were recommended prior to JDBC 4. Post-JDBC 4, the recommendation is now to use the service loading mechanism to further reduce dependencies of clients on particular drivers. Specifically, the client is to use the \texttt{DriverManager} abstraction, which allows multiple drivers to bid on establishing a connection for a given database URL. (The client does not use the service loader directly.) 
 
 \lstinputlisting[language=Java,caption={\tt Driver} instantiation through a service loader,label=listing:service-loader]{code-snippets/service-loader.java}
 
-Service loading (described by Fowler in~\cite{fowler04:_inver_contr_contain_depen_injec}) is now widely used to register and access service implementations, e.g. parsers, character sets, JDBC drivers, and JUnit5 extensions. 
+Service loading (described by Fowler in~\cite{fowler04:_inver_contr_contain_depen_injec}) is now widely used to register and access service implementations, for example, parsers, character sets, JDBC drivers, and JUnit5 extensions. 
 Listing~\ref{listing:service-loader} shows an example of a client requesting an available \texttt{Driver} from a service loader (and not the {\tt DriverManager}) and using that driver to request a jdbc MySQL connection.
 %Similar features for declarative services have been available for some time as part of OSGi~\footnote{OSGi services provide more features than Java service loading, including e.g. lifecycle management for services and the ability to wire, un- and rewire clients to the services they consume, but these are not relevant here.}. 
 
@@ -369,7 +369,7 @@ all of the methods and fields of their libraries.
 Enforcing the stated constraints requires additional support---either
 a Java 9+ runtime or an OSGi container implementation. The Java 9+
 compiler and runtime ensure that modules do not access modules to
-which they do not have access, e.g. non-exported modules. Under Java
+which they do not have access, for example, non-exported modules. Under Java
 9+, modules can also rely on having fine-grained control over
 reflection permissions. Similarly, under an OSGi container implementation,
 non-exported packages are invisible to other code in the same Java
@@ -422,7 +422,7 @@ Callbacks can be reflective. This is widely used in JSON and XML data binding an
 
 %\todo[inline]{Hey! From the writing here jackson and guava both access non-public fields, i.e. no difference. Is that true? -> jackson uses getters and setters, guava doesn't.}
 
-A popular alternative to \textit{jackson} is \textit{guava}. That library instead directly accesses even non-public fields, bypassing access restrictions\footnote{See \texttt{UnsafeReflectionAccessor::makeAccessible} in package \texttt{com.google.gson.internal.reflect}.}, as discussed in Section~\ref{ssec:api-usage-patterns:api-bypass}. Note that the general idea of reversing the direction of API access is not restricted to method calls but also extends to fields.
+A popular alternative to \textit{jackson} is \textit{guava}. That library instead directly accesses even non-public fields, bypassing access restrictions\footnote{See \texttt{UnsafeReflectionAccessor::makeAccessible} in package \texttt{com.google.gson.internal.reflect}.}, as discussed in Section~\ref{sec:api-usage-patterns:api-bypass}. Note that the general idea of reversing the direction of API access is not restricted to method calls but also extends to fields.
 
 \subsection{Beyond Reflection}
 
@@ -445,7 +445,7 @@ The \texttt{invokedynamic} instruction can also be used as an intermediate mecha
 
 %\todo[inline] { Jens $\rightarrow$ Pat: I would not mention modularity here because we dont really discuss this, instead we should state whether it can violate API access restrctions In principle, \texttt{Unsafe} or its newer equivalents could be used to violate modularity. However, we believe that the patterns observed in practice are unlikely to correspond to actual violations. }
 
-In principle, \texttt{Unsafe} or its newer equivalents could be used to bypass API restrictions. However, we believe that the patterns observed in practice are unlikely to correspond to actual bypasses.
+In principle, \texttt{Unsafe} or its newer equivalents could be used to bypass API access restrictions. However, we believe that the patterns observed in practice are unlikely to correspond to actual violations.
 
 % OK, so dynamic code generation could be a thing that matters sometimes, but not often enough that we want to talk about it here.
 
@@ -462,7 +462,9 @@ In principle, \texttt{Unsafe} or its newer equivalents could be used to bypass A
 We look for our usage patterns in our benchmark collection of 11 libraries (Table~\ref{tab:libs}).
 
 \subsection{API bypasses}
-We first investigate the use of API bypasses in our clients. This is useful to library developers if they want to identify which parts of their libraries that are supposed to be internal are actually used by clients. This can help them with API design in future versions. In Section~\ref{sec:classification}, we enumerated three broad categories
+We first investigate the use of API bypasses in our clients. This is useful to library developers if they want to identify which parts of their libraries that are supposed to be internal are actually used by clients. This can help them with API design in future versions. 
+
+In Section~\ref{sec:classification}, we enumerated three broad categories
 of bypasses: access modifiers, modularity conventions, and service loaders. We discuss each of them in turn.
 
 
@@ -470,8 +472,8 @@ of bypasses: access modifiers, modularity conventions, and service loaders. We d
 \input{tables/results/set-accessible-client-to-lib}
 \input{tables/results/set-accessible-lib-to-client}
 Table~\ref{tab:set-accessible-client-to-lib}
-shows some interesting uses of the reflection API \texttt{setAccessible()} to enable reflective access from clients to libraries,
-and Table~\ref{tab:set-accessible-lib-to-client} shows  some interesting uses of \texttt{setAccessible()} to enable reflective callbacks from libraries back to clients.
+shows selected uses of the reflection API \texttt{setAccessible()} to enable reflective access from clients to libraries,
+and Table~\ref{tab:set-accessible-lib-to-client} shows selected uses of \texttt{setAccessible()} to enable reflective callbacks from libraries back to clients.
 We can see that accesses to fields, constructors, and methods are all reasonably common, though some codebases only reflectively 
 access fields, while others only access methods.
 
@@ -491,7 +493,8 @@ We do find that some methods are already accessible before being invoked, and so
 An API bypass requires a \texttt{setAccessible()} call followed by an
 actual reflective access.  As expected, we see a good overlap between the
 \texttt{setAccessible()} calls to methods and reflective invocations.
-We find that our benchmarks contain reflective invocations of 20 constructors following a call to \texttt{setAccessible}, which were not already public. Of the 20 callsites, some are from groovy (dynamic language), some are for serialization, some instantiate objects where the constructor had default visibility. All of these reflective constructor invocations are callbacks from the library to the client: the library is providing a factory method to create instances of a client type that it has been supplied with. This appears to be an acceptable API use.
+We find that our benchmarks contain reflective invocations of 20 constructors following a call to \texttt{setAccessible}, which were not already public. Of the 20 callsites, some are generated by the
+groovy dynamic language; some are for serialization and some instantiate objects where the constructor had default visibility. All of these reflective constructor invocations are callbacks from the library to the client: the library is providing a factory method to create instances of a client type that it has been supplied with. This appears to be an acceptable API use.
 Tables~\ref{tab:refl-fields} and \ref{tab:refl-callbacks} show how many reflective usages are actually made.
 
 Table~\ref{tab:refl-fields} shows some of our data on reflective field accesses. We observe that many of these reflective field accesses are for serialization. We also observe that in the case of fields, there are only a few calls that access fields that were previously not accessible.
@@ -524,7 +527,7 @@ For OSGi, none of our libraries are used by our clients in the context of OSGi c
 Similarly, although we have Java 8 clients which can violate the unenforced module export rules of Java 9 libraries (they run in environments that don't enforce the rules), none of the clients do so. We believe that the most likely explanation is that such modularity violations are uncommon; however, it is also possible that Java 9 module definitions are too permissive and do not prevent calls that should be prevented.
 
 Table~\ref{tab:internal} shows uses of packages labelled ``internal'' from outside
-a given module. In some cases (e.g. netty-buffer and netty-common),
+a given module. In some cases (for example, netty-buffer and netty-common),
 the uses are across different modules in the same project. We looked
 at one case, \emph{rocketmq-remoting} and \emph{netty}. In this case,
 \emph{rocketmq-remoting} uses internal logging infrastructure from
@@ -573,14 +576,14 @@ we use the latest stable version of each library and consider it to be represent
 the versions used by clients.  The ``distinct used'' column counts an
 element once regardless of how many clients use that element, while
 ``total used'' counts an element once per client using it. We identify method calls by the
-declared type of the receiver object, e.g. calls to {\tt o1.f()} and {\tt o2.f()} are the same
+declared type of the receiver object, for example, calls to {\tt o1.f()} and {\tt o2.f()} are the same
 if {\tt o1} and {\tt o2} have the same declared type.
 Our uses 
 include both vanilla and reflective uses of API elements.
 
 \input{tables/results/standard-api-usage}
 
-We can observe that at most 32\% (and on average 6\%) of the methods in the API surface
+We can observe that at most 22\% (and on average 9\%) of the methods in the API surface
 are used by clients, with \emph{slf4j-api} having the highest use proportion.
 % , and sometimes less than 1\%  of methods. 
 Table~\ref{tab:usage-distribution} suggests that there is a small overlap between methods
@@ -595,12 +598,12 @@ some other API method.
 % reads or writes would be nice to know, but we can't get it in time.
 Despite standard OO practices calling for fields to be encapsulated, more than half of the libraries have their fields accessed by clients. Only 1 of the \emph{joda-time} and 25 of the \emph{jackson-core} fields are static (so it's not just constants); the rest of the accesses are to instance fields.
 However, the number of fields used is often in the single digits,
-the \emph{jackson} libraries being an exception with about 10\% of declared fields used.
+the \emph{jackson} libraries being an exception with about 11\% of declared fields used.
 About half of the libraries have clients subclassing a
 single-digit number of library types, again with the exception of
 \emph{jackson} with dozens of subtypes in clients.
 
-We observe only one use of library annotations across all our benchmarks. % crushpaper:crushpaper : com.fasterxml.jackson.databind.annotation.JacksonStdImpl
+We observe only one use of library annotations across all our benchmarks. \emph{crushpaper} uses \texttt{com.fasterxml.jackson.databind.annotation.JacksonStdImpl}, which is used for indicating implementation classes and is typically used by serializers and deserializers in \emph{jackson}.
 
 Figure~\ref{fig:jaccard} presents a boxplot of
 pairwise Jaccard similarities between the portion of
@@ -608,6 +611,7 @@ the APIs used by different clients for each library. Two clients $u_1$ and $u_2$
 of library $L$ which use exactly the same parts of $L$'s API would result in a similarity of 1;
 more generally, it is
 \[ \frac{|\mbox{used.API}_L(u_1) \cap \mbox{used.API}_L(u_2)|}{|\mbox{used.API}_L(u_1) \cup \mbox{used.API}_L(u_2)|}. \]
+
 Although Table~\ref{tab:usage-distribution} showed that some of the members overlap, we can
 see from this Figure that the overall level of overlap is generally less than 10\%. We observe
 a half-dozen client pairs (data points) where there is about 50\% overlap between client API uses, including for \emph{fastjson},
@@ -625,14 +629,14 @@ a half-dozen client pairs (data points) where there is about 50\% overlap betwee
 
 
 We were not surprised by the generally small amounts of overlap, because the libraries' exposed API surfaces tended
-to have thousands of exposed elements and hundreds of used elements. Recall also our earlier discussion about \emph{fastjson} and how it could be fissioned into modules. Generally, across our benchmarks, small number of members are used by
+to have thousands of exposed elements and hundreds of used elements. This result makes a convincing argument for our discussion about \emph{fastjson} and \emph{jsoup} in Sections~\ref{sec:fastjson-fission} and \ref{sec:jsoup-fission} how they could be fissioned into modules. Generally, across our benchmarks, small number of members are used by
 multiple clients, but many others are used only once.
 
 Table~\ref{tab:same-method} presents another view of API overlap between clients. We constructed the largest set
 of methods shared by more than 1 client of a library (``max-set'') and report the size of that set as well as the percentage
-of clients which use all of that set of methods. So, for \emph{gson}, we can see that there is one method shared
-by all 4 clients, and no set of 2 methods shared by 2 clients. Interestingly, then, \emph{jackson-databind} has a core of 5
-methods which are all used by 20\% (3) of its clients. We characterize the amount of overlap as generally low but not
+of clients which use all of that set of methods. So, for \emph{json}, we can see that there is one method called
+by 3 out of 4 clients, and for \emph{jsoup}, ten methods are all called
+by 3 out of 4 clients. We characterize the amount of overlap as generally low but not
 nonexistent: a few methods are repeatedly used.
 
 \input{tables/results/perc-clients-same-methods}
@@ -645,5 +649,5 @@ nonexistent: a few methods are repeatedly used.
   skipabove=\topsep,
   skipbelow=\topsep
   ]
-{\bf Finding 2:} APIs are sparsely used by clients---mostly methods (6\% utilization), but a few fields (3\%) and supertypes (6\%). There is limited but nonzero overlap between the methods used by different clients.
+{\bf Finding 2:} APIs are sparsely used by clients---mostly methods (9\% utilization), but a few fields (4\%) and supertypes (6\%). There is limited but nonzero overlap between the methods used by different clients.
 \end{mdframed}

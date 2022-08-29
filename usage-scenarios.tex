@@ -1,21 +1,23 @@
 %======================================================================
 \chapter{Applications}
+\label{sec:applications}
 %======================================================================
+In this chapter, we discuss two applications of our results from Chapter~\ref{sec:apiusage}. The first is the visualization tool VizAPI which uses the results of our static and dynamic analyses tool to create visualizations for developers to understand API usage in their components. The second is library fission, which we also perform using the results of our static and dynamic analyses tool.
 \section{Visualization}
 \label{sec:visualization}
-We now present the VizAPI tool, which shows visualization overviews depicting API usages---from clients to libraries, but also between libraries (including transitive dependencies). The goal of VizAPI is to provide a heuristic for developers considering the impacts of changes to libraries.
+We now present the VizAPI tool, which shows visualization overviews depicting API usages---namely, usages of clients by libraries for the most part, but also inter-library usages (which includes usages of transitive dependencies by libraries). The goal of VizAPI is to provide information for developers considering the impacts of changes to libraries.
 
 We have verified that each client uses only a small portion of each of its dependencies' API surfaces. Consider breaking changes again. GitHub provides the Dependabot tool~\cite{mullans20:_keep_depen}, which monitors for upstream changes and automatically proposes pull requests to update dependency versions. That tool may well pull in breaking changes. However, we hypothesize that, most of the time, most breaking changes will not affect most clients; it is useful for clients to know whether they are using the parts of the API surface that are subject to a particular breaking change. A client with broad dependencies on a library (uses a larger fraction of its API surface) is more likely to be affected by its changes than a client with narrow dependencies (smaller fraction). A narrow library dependency would also suggest that it would be easier to swap the library for a functionally similar replacement.
 
 Our visualization allows developers and
 researchers to visualize distribution information about how different
 parts of clients use different parts of libraries. VizAPI incorporates information from static and dynamic analyses. 
-We have made VizAPI publicly available\footnote{\url{https://github.com/SruthiVenkat/api-visualization-tool}}, although it is still in development.
+We have made VizAPI publicly available\footnote{\url{https://github.com/SruthiVenkat/api-visualization-tool}}, although it is still in development. We have also archived the artifact at \href{https://doi.org/10.5281/zenodo.7023911}{https://doi.org/10.5281/zenodo.7023911}
 
 \begin{figure}[h]
 \begin{center}
 \includegraphics[height=6cm]{images/intro-example.png}
-\caption{An Example VizAPI Application}
+\caption{An Example VizAPI Visualization}
 \label{fig:example}
 \end{center}
 \end{figure}
@@ -32,11 +34,32 @@ library. We also present two VizAPI usage scenarios.
 \subsection{Visualization System}
 \label{subsec:vis-system}
 
+\begin{figure*}[h]
+\begin{center}
+
+\subfloat[Usage Scenario 1: Library \textit{jsoup} (pink with dark borders), called by two clients, \textit{ez-vcard} (hollow with purple border) and \textit{JsoupXpath} (hollow with pink border). Exploration shows that internal jsoup packages aren't called directly by clients.
+\label{fig:usagescenario1}]
+{\includegraphics[width=16cm]{images/usage-scenario1.pdf}}
+\hspace{7mm}
+
+\subfloat[Usage Scenario 2: Client \textit{dataprocessor} (hollow, orange border) calls only one package in library \textit{fastjson} (green fill).
+\label{fig:usagescenario2}]
+{
+\makebox[16cm]{
+\includegraphics[width=11cm]{images/usage-scenario2.pdf}
+}
+}
+\caption{\label{fig:usagescenarios} VizAPI Usage Scenarios.}
+
+\end{center}
+\end{figure*}
+
+
 Once we have generated data from our tool that runs the static and dynamic analyses, we use a modified version
 of the d3graph\footnote{\url{https://pypi.org/project/d3graph/}} library in Python to generate a d3js\footnote{\url{https://d3js.org/}}
-visualization. 
-The graph in Figure~\ref{fig:usagescenario1}
-is an example of a graph produced by VizAPI.
+visualization. The modifications that we made to the d3graph  library in Python in Python include multiple styling changes (for example, changing node styles based on whether it is a client, library or dependency),
+legends and a toggle to show all package names. 
+The graphs in Figures~\ref{fig:example}, \ref{fig:usagescenario1} and \ref{fig:usagescenario2} are examples of graphs produced by VizAPI.
 
 VizAPI graphs are force-directed graphs based on the frequency of
 interactions between different software components.  Each node is a
@@ -61,27 +84,6 @@ Hovering on a node shows the list of packages and
 the JAR that they belong to, 
 formatted as “jar : $\langle$space separated list of packages$\rangle$”. 
 
-\begin{figure*}[h]
-\begin{center}
-
-\subfloat[Usage Scenario 1: Library \textit{jsoup} (pink with dark borders), called by two clients, \textit{ez-vcard} (hollow with purple border) and \textit{JsoupXpath} (hollow with pink border). Exploration shows that internal jsoup packages aren't called directly by clients.
-\label{fig:usagescenario1}]
-{\includegraphics[width=16cm]{images/usage-scenario1.pdf}}
-\hspace{7mm}
-
-\subfloat[Usage Scenario 2: Client \textit{dataprocessor} (hollow, orange border) calls only one package in library \textit{fastjson} (green fill).
-\label{fig:usagescenario2}]
-{
-\makebox[16cm]{
-\includegraphics[width=11cm]{images/usage-scenario2.pdf}
-}
-}
-\caption{\label{fig:usagescenarios} VizAPI Usage Scenarios.}
-
-\end{center}
-\end{figure*}
-
-
 \subsection{Case Study}
 \label{subsec:evaluation}
 
@@ -100,22 +102,20 @@ Imagine that we are a jsoup developer and want to understand
 how some clients interact with it, in anticipation of making some breaking changes. We choose clients JsoupXpath\footnote{\url{https://github.com/zhegexiaohuozi/JsoupXpath}\label{jsoupxpath}} and ez-vcard\footnote{\url{https://github.com/mangstadt/ez-vcard}\label{ez-vcard}}.
 Figure~\ref{fig:usagescenario1} shows static and dynamic interactions of the 2 clients with the jsoup\footnote{\url{https://github.com/jhy/jsoup}\label{jsoup}} library. Recall that nodes represent packages and edges represent interactions (usually invocations) between packages. 
 
-We can start our exploration with the cluster of pink nodes. Many of these nodes belong to either JsoupXpath or jsoup. Hovering over a node tells us the package names while double-clicking shows us its direct interactions. (To search for a package, we can click on ``show package names'' and use the browser's find functionality.) Here, client JsoupXpath calls directly into \texttt{org.jsoup.nodes} and \texttt{org.jsoup.select}. Notably, and as we might expect, we can see that \texttt{org.jsoup.helper} and \texttt{org.jsoup.internal} aren't called directly by JsoupXpath. This would mean that breaking changes in \texttt{org.jsoup.helper} or \texttt{org.jsoup.internal} wouldn't directly affect JsoupXpath\footnote{As a specific example, the retraction of an internal jsoup API would not break this client. Behavioural changes that are directly passed through to the external API, e.g. through delegation, can still break clients, but we can consider those to be changes in the external API.} 
+We can start our exploration with the cluster of pink nodes. Many of these nodes belong to either JsoupXpath or jsoup. Hovering over a node tells us the package names while double-clicking shows us its direct interactions. (To search for a package, we can click on ``show package names'' and use the browser's find functionality.) Here, client JsoupXpath calls directly into \texttt{org.jsoup.nodes} and \texttt{org.jsoup.select}. Notably, and as we might expect, we can see that \texttt{org.jsoup.helper} and \texttt{org.jsoup.internal} aren't called directly by JsoupXpath. This would mean that breaking changes in \texttt{org.jsoup.helper} or \texttt{org.jsoup.internal} wouldn't directly affect JsoupXpath\footnote{As a specific example, the retraction of an internal jsoup API would not break this client. Behavioural changes that are directly passed through to the external API, for example, through delegation, can still break clients, but we can consider those to be changes in the external API.} 
 
-Similarly, ez-vcard, which belongs to the purple cluster in Figure~\ref{fig:usagescenario1}, directly calls into \texttt{org.jsoup}. ez-vcard also calls into jackson-core\footnote{\url{https://github.com/FasterXML/jackson-core}\label{jackson-core}} and jackson-databind\footnote{\url{https://github.com/FasterXML/jackson-databind}\label{jackson-databind}}, which are very tightly coupled amongst their own packages and with each other. As a jsoup developer, we would be indifferent; others, however, can observe that breaking changes in jackson-core and jackson-databind could propagate.
+Similarly, ez-vcard, which belongs to the purple cluster in Figure~\ref{fig:usagescenario1}, directly calls into \texttt{org.jsoup}. ez-vcard also calls into jackson-core\footnote{\url{https://github.com/FasterXML/jackson-core}\label{jackson-core}} and jackson-databind\footnote{\url{https://github.com/FasterXML/jackson-databind}\label{jackson-databind}}, which are very tightly coupled amongst their own packages and with each other. As a jsoup developer, we would be indifferent since it does not affect us; others, however, can observe that breaking changes in jackson-core and jackson-databind could propagate.
 
 \paragraph{Usage Scenario 2: dataprocessor}
 
-Figure~\ref{fig:usagescenario2} presents a second usage scenario. Here, say we are the developers of client dataprocessor\footnote{\url{https://github.com/dadiyang/dataprocessor}\label{dataprocessor}} (hollow with orange border). This client uses the fastjson\footnote{\url{https://github.com/alibaba/fastjson}\label{fastjson}} library (green fill). Our visualization shows calls only from dataprocessor package \texttt{com.github.dataprocessor.slice}, which is the orange-bordered client node (identity of the package available by hovering) to the package \texttt{com.alibaba.fastjson}. No other parts of dataprocessor use fastjson. This means that when we, as dataprocessor developers, need to upgrade the fastjson version, we only need to inspect the source code in our \texttt{com.github.dataprocessor.slice} package. 
+Figure~\ref{fig:usagescenario2} presents a second usage scenario. Here, say we are the developers of client dataprocessor\footnote{\url{https://github.com/dadiyang/dataprocessor}\label{dataprocessor}} (hollow with orange border). This client uses the fastjson\footnote{\url{https://github.com/alibaba/fastjson}\label{fastjson}} library (green fill). Our visualization shows calls only from dataprocessor package \texttt{com.github.dataprocessor.slice}, which is the orange-bordered client node (identity of the package available by hovering) to the package \texttt{com.alibaba.fastjson}. No other parts of dataprocessor use fastjson. This means that when we, as dataprocessor developers, need to upgrade the fastjson version, we only need to inspect the source code in our \texttt{com.github.dataprocessor.slice} package and cross-reference against release notes for fastjson. 
 
 Note also the disconnected nodes in Figure~\ref{fig:usagescenario2}. These are all packages of fastjson that are not used by dataprocessor: any breaking changes in these packages definitely do not directly affect dataprocessor, and are less likely to affect it overall than packages that are directly used.
 
-We have presented a case study on possible usage scenarios for the VizAPI tool to show its usefulness to component developers and researchers.
-
 \section{Library Fission}
-Modern software uses libraries extensively, to reuse functionality. Over time, libraries tend to extend their functionality, introduce more features and modify existing ones. This could lead to huge library sizes, a lot of which goes unused by a client that imports it. This is called software bloating and there has been work around debloating. Debloating focuses on the client’s execution and analyzing the client. We propose library fission, which focuses on splitting libraries based on client usage. This is a more permanent solution to bloating and does not require running analyses on clients for every execution. (We aim to split libraries based on client behaviour in a way that sub-modules of the fissioned library have common functionality.)
+Modern software extensively reuses existing functionality using third-party libraries. Over time, libraries tend to extend their functionality, introducing more features and modifying existing ones. This leads to huge library sizes, a lot of which goes unused by a client that imports it. We have observed that modern API surfaces are vast and include thousands of potential access points, of which only hundreds are used by any typical client.This is called software bloating and there has been work around debloating. Debloating focuses on a single client at a time; it depends on dynamic analysis based on the client’s execution. We instead propose library fission, which focuses on splitting libraries based on client usage. This is a more permanent solution to bloating and does not require running analyses on clients for every execution. (We aim to split libraries based on client behaviour in a way that sub-modules of the fissioned library have common functionality.)
 
-We use the data generated by our static and dynamic analyses to experiment with fissioning a subset of our corpus of libraries. The following are the steps we follow to perform library fission for a given library, $L$:
+We use the data generated by our static and dynamic analyses to experiment with fissioning a subset of our corpus of libraries. On a high level, by library fission, we mean that we separate packages of a library into different Maven submodules. The following are the steps we follow to perform library fission for a given library, $L$:
 \begin{enumerate}
 \item Filter out all interactions with $L$, i.e., client uses of $L$, $L$'s uses of dependencies and intra-library uses of $L$.
 \item Run the Louvain clustering algorithm on the filtered data where each node is set to be a package belonging to a jar.
@@ -126,8 +126,10 @@ We use the data generated by our static and dynamic analyses to experiment with 
 We now discuss specific examples from our libraries.
 
 \subsection{\emph{fastjson}}
+\label{sec:fastjson-fission}
+
 We have 26 clients for \emph{fastjson}. Based on the usages of these clients, we obtained the following initial set of 5 clusters:
-\begin{enumerate}
+\begin{itemize}
 \item Cluster 1:
 \begin{itemize}
 \item \texttt{com.alibaba.fastjson.annotation}
@@ -157,10 +159,10 @@ We have 26 clients for \emph{fastjson}. Based on the usages of these clients, we
 \begin{itemize}
 \item \texttt{com.alibaba.fastjson.support.jaxrs}
 \end{itemize}
-\end{enumerate}
+\end{itemize}
 
-We observe that the clusters are loosely based on functionality, that is, the packages within a cluster have similar functionality. This is not strictly true for all packages, but it is a good approximation. We see that the \texttt{jaxrs} and \texttt{spring} functionalities are clusters of their own and it makes sense to separate these into submodules since they provide their own independent functionality. However, we observed that there exist cyclic dependencies between Cluster 1, 2 and 3. If a library developer performs library fission and they run into cyclic dependencies, we recommend that they resolve these dependencies by moving classes into appropriate submodules. Due to our lack of domain knowledge, that is knowledge about functionalities of individual classes, we combined these 3 clusters into one submodule. Our final submodules are as follows:
-\begin{enumerate}
+We observe that the clusters are loosely based on functionality, that is, the packages within a cluster have similar functionality. This is not strictly true for all packages, but it is a good approximation. We see that the \texttt{jaxrs} and \texttt{spring} functionalities are clusters of their own and it makes sense to separate these into submodules since they provide their own independent functionality. However, we observed that there exist cyclic dependencies between Cluster 1, 2 and 3. If a library developer performs library fission and they run into cyclic dependencies, we recommend that they resolve these dependencies by moving classes into appropriate submodules. Due to our lack of domain knowledge (we don't know about what individual \emph{fastjson} classes do), we combined these 3 clusters into one submodule. Our final submodules are as follows:
+\begin{itemize}
 \item Submodule 1 --- utils:
 \begin{itemize}
 \item \texttt{com.alibaba.fastjson.annotation}
@@ -184,16 +186,18 @@ We observe that the clusters are loosely based on functionality, that is, the pa
 \begin{itemize}
 \item \texttt{com.alibaba.fastjson.support.jaxrs}
 \end{itemize}
-\end{enumerate}
+\end{itemize}
 
-When we split \emph{fastjson} into submodules, we observed that each submodule needed fewer dependencies in the pom compared to the current version of \emph{fastjson} that is not split. The current version of \emph{fastjson} has 61 dependencies, while \emph{utils} has 47, \emph{spring} has 27 and \emph{jaxrs} has 29. Importing one of these submodules means a lesser probability of propagated vulnerabilities, version conflicts and breaking changes.
+When we split \emph{fastjson} into submodules, we observed that each submodule needed fewer dependencies in the pom compared to the current version of \emph{fastjson} that is not split. The current version of \emph{fastjson} has 61 dependencies, while \emph{utils} has 47, \emph{spring} has 27 and \emph{jaxrs} has 29. Importing one of these newer submodules means a smaller probability of propagated vulnerabilities, version conflicts and breaking changes.
 
 We sent an email to the \emph{fastjson} contributors proposing a split and did not receive a response, after which we created a pull request\footnote{\url{}https://github.com/alibaba/fastjson/pull/4276}. Our PR text was as follows:
 ``This PR splits fastjson into 3 submodules - utils, spring, jaxrs. We're looking into Java API usage as part of research and propose this split. These submodules are based on usage patterns that we've observed clients making of fastjson. It is beneficial to clients – they can import only the submodule they need to use (utils seems to be most popular). After this change, clients will not be affected by breaking changes in unused submodules and can avoid version conflicts and vulnerabilities propagated through dependencies. We believe that this split makes it easier to release backward compatible versions of fastjson and to isolate breaking changes."
 
 \subsection{\emph{jsoup}}
+\label{sec:jsoup-fission}
+
 Based on usage by the 7 clients of jsoup we have in our benchmark set, we observed the following clusters:
-\begin{enumerate}
+\begin{itemize}
 \item Cluster 1:
 \begin{itemize}
 \item \texttt{org.jsoup.parser}
@@ -211,11 +215,11 @@ Based on usage by the 7 clients of jsoup we have in our benchmark set, we observ
 \item \texttt{org.jsoup.select}
 \item \texttt{org.jsoup.nodes}
 \end{itemize}
-\end{enumerate}
+\end{itemize}
 
 We observed multiple cyclic dependencies. In the case of cyclic dependencies, it is best for the library developers to split classes in packages and move them to clusters based on functionality. 
 
-We now discuss a few interesting things we noted in the \emph{jsoup} clusters. Cluster 1 contains \texttt{org.jsoup.internal}. It is clear from the naming that this package is meant for internal use only and not for clients. We suggest that such packages be moved to a separate submodule so that clients need not import it. Similarly, Cluster 2 contains \texttt{org.jsoup.examples} which also almost certainly will not be needed by clients and can also be moved to a separate submodule. 
+We now discuss a few interesting things we noted in the \emph{jsoup} clusters. Cluster 1 contains \texttt{org.jsoup.internal}. It is clear from the naming that this package is meant for internal use only and not for clients. We suggest that such packages be moved to a separate submodule so that clients are not tempted to import them. Similarly, Cluster 2 contains \texttt{org.jsoup.examples} which also almost certainly will not be needed by clients and can also be moved to a separate submodule. 
 
 Due to the multiple cyclic dependencies that we observed, we did not raise a pull request for \emph{jsoup}.
 
@@ -223,6 +227,6 @@ Due to the multiple cyclic dependencies that we observed, we did not raise a pul
 Our data for 101 Java software components contains different kind of interactions across component boundaries. This data can be analyzed and prove useful in the following ways:
 \begin{itemize}
 \item Library developers can observe different usage patterns of their APIs. The clusters observed in library packages can help with new version releases. Breaking changes might be restricted to clusters and library developers can choose whether to make clusters from new versions backward compatible with other clusters from older versions or not. 
-\item Clients can also check if breaking changes in new library versions will affect their code during upgrades. 
+\item Clients can also check if breaking changes in new library versions will affect their code during upgrades and cross check this with library changelogs. 
 \item Unused dependencies can be identified and removed to prevent them from possibly introducing version conflicts and vulnerabilties.
 \end{itemize}

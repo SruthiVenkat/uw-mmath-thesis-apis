@@ -1,0 +1,6 @@
+[{
+  "url": Github link to repo,
+  "commit": Commit ID,
+  "artifact": artifact ID of project,
+  "type": "client" or "library"
+}]
