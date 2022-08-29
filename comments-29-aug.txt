@@ -1,0 +1,75 @@
+Chapter 4
+
+Before starting 4.1 put a paragraph introducing the two applications you're going to talk about.
+
+from client to libraries -> namely, usages of clients by libraries for the most part, but also inter-library usages (which includes usages of transitive dependencies by libraries).
+
+I wonder if we should say that VizAPI provides a heuristic. Maybe "provide some information" is more accurate.
+
+Probably footnote 1 should also include the permanent zenodo link there.
+
+Figure 4.1's caption should probably be An Example VizAPI Visualization, not Application.
+
+4.1.1: in the thesis you should mention how you modified d3graph (at least the outlines)
+
+"The graph in Figure 4.2a is an example of a graph produced by VizAPI." Well, let's also refer back to 4.1 since it's on the same page.
+
+"As a jsoup developer, we would be indifferent" -> why?
+
+"we only need to inspect the source code in our com.github.dataprocessor.slice package." Ideally we can cross-reference against release notes for fastjson.
+
+"We have presented a case study on possible usage scenarios for the VizAPI tool to show
+its usefulness to component developers and researchers." Hmm, let's put a revised version of that sentence before Usage Scenario 1 if it's not redundant. But definitely not there. Just finish with the end of usage scenario 2.
+
+Section 4.2
+
+I like thinking of it as a more permanent solution. It's not really actually permanent because evolution continues, but more permanent, sure. The paragraph is good, but here's some tweaks.
+
+Let's reword the first sentence: "Modern software extensively reuses existing functionality using third-party libraries." 
+
+introduce -> introducing; modify -> omdifying
+
+This could lead -> Let's say: We have observed that modern API surfaces are vast and include (thousands?) of potential access points, of which only (hundreds?) are used by any typical client.
+
+I think I would say debloating focusses on a particular client at a time.
+
+We instead propose library fission...
+
+Before listing the steps, can we have a sentence that does a high-level explanation of what library fission is?
+
+4.2.1: between functionality and that, use a semicolon.
+
+between Clusters 1, 2, and 3.
+
+I would \begin{itemize} for the Cluster 1, 2, 3 instead of \begin{enumerate}. It looks weird to have 1. Cluster 1.
+
+that is knowledge about functionalities of individual classes -> (we don't know about what individual fastjson classes do)
+
+Importing one of these *newer* submodules
+
+lesser probability -> smaller probability
+
+4.2.2: so that clients need not import it -> so that clients are not tempted to import them.
+
+Looks good!
+
+4.3: can also check: we can also mention changelogs here.
+
+Let's see if we can put Figure 4.2 closer to where it's discussed in the text.
+
+# Chapter 5
+
+Second paragraph: split it into multiple sentences and make sure the verb is easy to find in each of these sentences.
+
+In the thesis, don't use a \subsection without a \section. Promote 5.0.1 and 5.0.2 to \section.
+
+I think there should be a final paragraph of some sort.
+
+# Chapter 1
+
+After reading chapters 4 and 5 I went back to Chapter 1.
+
+I think the "We stuck component usage and explore its usefulness" paragraph should probably be signposted more with a "In this work, we (something general)" and continue with "We look at API surface usage" and then what you have now. I think there should also be a \paragraph starting there to point out that you are now talking about what you are doing. Like, there's an imbalance between the amount of content in Chapter 3 and the amount of content summarizing it in Chapter 1 here. And there should also be some hint that there are 2 applications in that last paragraph of 1.2. Because VizAPI looks like the topic sentence of that paragraph. And it isn't.
+
+OK I think that is probably good enough to send to readers at this point! Congrats.
+
