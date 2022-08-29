@@ -8,8 +8,8 @@ Such patterns can provide interesting hints for API designers in the future.
 We begin by defining two terms that we use in this work, followed by an example. 
 A library's \emph{intended API surface} is the set of
 classes, methods and fields that it expects clients to use. Other
-classes, methods and fields are \emph{internal} to the library. Using
-internal parts of the library involves some sort of \emph{bypass}. On
+classes, methods and fields are \emph{internal} to the library. Clients using internal parts of the library perform
+some sort of \emph{bypass}. On
 the other hand, a client uses an \emph{actual API surface} of the
 library. In the absence of bypasses, the actual surface is a subset of
 the declared surface.
@@ -46,8 +46,8 @@ the declared surface.
 Figure~\ref{fig:api-surface} illustrates the situation where library
 $L$ is used by clients (users) $u_a$ and $u_b$. $L$'s intended API surface
 includes classes \texttt{C}$_1$ through \texttt{C}$_4$, while class
-\texttt{C}$_5$ is internal to $L$, and uses of it involve bypasses. We
-have evidence that the actual API surface includes classes
+\texttt{C}$_5$ is internal to $L$, and uses of it involve bypasses. From Figure~\ref{fig:api-surface},
+we can see that the actual API surface includes classes
 \texttt{C}$_2$ through \texttt{C}$_4$, and we don't know about whether
 \texttt{C}$_1$ is used by any extant client.
 
@@ -152,7 +152,7 @@ as we describe below.
 We capture reflective uses of the \texttt{Class} object by intercepting calls to
 \texttt{java.lang.Class.forName()} and \texttt{java.lang.ClassLoader.loadClass()}.
 
-\paragraph{Service Loaders} We are particularly interested in bypasses of 
+\paragraph{Service Loaders} We are particularly in bypasses of 
 services using \texttt{ServiceLoader}. Before the instrumentation, we record a list 
 of services and their implementations by inspecting files in \texttt{src/main/resources/META-INF/services}.
 With this information, we look for service bypasses which are direct uses of service implementation 
@@ -212,7 +212,7 @@ h2 & 1.4.200 & database & 147.2 & 1010 & \checkmark & & \checkmark \\
 \end{center}
 \end{table*}
 
-We use the libraries.io dataset\footnote{\url{https://libraries.io/}}, to construct a dependency graph and look for the most used upstream components (highest number of other components depends on [any version of] those), 
+We use the libraries.io dataset\footnote{\url{https://libraries.io/}} to construct a dependency graph and look for the most used upstream components (highest number of other components depends on [any version of] those), 
 and the top downstream components (clients). We exclude any clients that have less than 10 stars or less than 10 forks on Github.  Apart from this, we also pick a subset of projects from the
 Duets benchmarks~\cite{durieux21}. We exclude components that do not contain unit tests, components that use our chosen library only for testing
 and components that declare the library as a dependency in their POM file, but do not actually use it. Our benchmark set contains both Maven single module and multi-module components.
@@ -567,7 +567,7 @@ mis-uses to uses, we present results on API use.
 
 Table~\ref{tab:usage-distribution} presents the usage distribution of
 libraries' API elements (methods, fields, and classes subtyped) as
-covered by client tests. The ``total in library'' refers to the number of
+covered by client tests. The ``total in lib'' refers to the number of
 public and protected members, including static ones. To calculate these totals,
 we use the latest stable version of each library and consider it to be representative of 
 the versions used by clients.  The ``distinct used'' column counts an
@@ -577,6 +577,7 @@ declared type of the receiver object, e.g. calls to {\tt o1.f()} and {\tt o2.f()
 if {\tt o1} and {\tt o2} have the same declared type.
 Our uses 
 include both vanilla and reflective uses of API elements.
+
 \input{tables/results/standard-api-usage}
 
 We can observe that at most 32\% (and on average 6\%) of the methods in the API surface
@@ -599,6 +600,7 @@ About half of the libraries have clients subclassing a
 single-digit number of library types, again with the exception of
 \emph{jackson} with dozens of subtypes in clients.
 
+We observe only one use of library annotations across all our benchmarks. % crushpaper:crushpaper : com.fasterxml.jackson.databind.annotation.JacksonStdImpl
 
 Figure~\ref{fig:jaccard} presents a boxplot of
 pairwise Jaccard similarities between the portion of
