@@ -1,8 +1,244 @@
 %======================================================================
-\chapter{Applications}
+\chapter{Applications of Studying API Usage}
 \label{sec:applications}
 %======================================================================
-In this chapter, we discuss two applications of our results from Chapter~\ref{sec:apiusage}. The first is the visualization tool VizAPI which uses the results of our static and dynamic analyses tool to create visualizations for developers to understand API usage in their components. The second is library fission, which we also perform using the results of our static and dynamic analyses tool.
+In this chapter, we first present a classification framework for classifying API uses and also present a few API usage patterns. We then discuss two applications of our results from Chapter~\ref{sec:apiusage}. The first is the visualization tool VizAPI which uses the results of our static and dynamic analyses tool to create visualizations for developers to understand API usage in their components. The second is library fission, which we also perform using the results of our static and dynamic analyses tool.
+
+
+\section{Classification of API Uses}
+\label{sec:classification}
+
+We now present a conceptual framework that outlines four dimensions along which a potential API use can be classified. We phrase the four dimensions as questions; each API usage has an answer for each of the questions. They are as follows: \emph{what}, \emph{how} \emph{which way} and \emph{why not}?
+
+\begin{enumerate}
+\item \emph{What} thing is being accessed?
+\begin{itemize}
+    \item types: user declares a subtype of a provider type;
+    \item classes: user instantiates an object of a provider's class;
+    \item annotations: user annotates a class or member with a provider-defined annotation;
+    \item methods: user invokes a method from the provider; and,
+    \item fields: user accesses a field defined in the provider.
+\end{itemize}
+\item \emph{How} is it accessed?
+\begin{itemize}
+    \item direct: user directly names thing being accessed;
+    \item indirect: (methods only) thing being accessed differs from thing on declared type of the receiver object;
+% we are using a runtime definition of virtual here: even if the call is declared virtual, we're calling it direct if declared target = actual target
+    \item reflection/unsafe: user creates a handle to thing being accessed and uses that handle to perform the access;
+% Mastrangelo says that, for our context, unsafe is used for serialization/deserialization, as sort of a super reflection.
+    \item advanced dynamic: none of the above---user accesses thing in some other way, for example, via proxies.% or runtime code generation.
+\end{itemize}
+\item \emph{Which way} is the access going?
+\begin{itemize}
+    \item client user to library provider;
+    \item library user to client provider, via callbacks.
+\end{itemize}
+\item \emph{Why not}, i.e. is the user bypassing access control?
+\begin{itemize}
+    \item access modifiers prevent the access, but are overridden;
+    \item modularity conventions or mechanisms prevent the access: ``internal'' package, Java 9 modules, or OSGi;
+    \item service loader restrictions prevent the access.
+\end{itemize}
+\end{enumerate}
+
+The ``why not'' dimension differentiates uses from misuses; an API use that is allowed and expected by the API developer does not have an answer for ``why not''. Considering intended versus actual API surfaces gives another
+perspective on the ``why not'' question. The other dimensions serve to classify the API use or misuse and understand which kinds of uses and misuses are most common. We intend for this framework to serve as a guideline for component developers who want to introspect about their software. Library developers can use this framework when they design new APIs to understand which parts of their library are most useful to clients and how. Client developers can use this framework to inspect how libraries are used and possibly to compare and contrast different libraries with the same functionality.
+
+\section{API Usage Patterns}
+\label{sec:patterns}
+
+We now discuss API usage patterns with examples. Our examples use the \textit{connector-j} library\footnote{\url{https://github.com/mysql/mysql-connector-j/}, release 8.0.26}, which enables Java programs to communicate with MySQL databases. Namespaces are omitted for brevity. The standard Java library JDBC types belong to package \texttt{java.sql} and MySQL classes to packages \texttt{com.mysql.cj.jdbc.*}. Most of the code snippets are not considered best practice, and therefore illustrate API misuses.
+
+We suggest that it is useful to think of misuse as on a
+continuum rather than as a strict binary allowed-versus-not-allowed.
+Some uses are more appropriate than others: when a
+client passes an object to a serialization library, it is asking
+the library to access even the private fields of that object, and so this
+does not constitute a mis-use. Calling a deprecated API is less clear-cut.
+Finally, explicitly calling into internal classes is likely to be a mis-use.
+All bypasses some incur technical debt and add to the project's risk,
+but some bypasses are more risky than others.
+
+
+\subsection{Vanilla API Usage}
+
+\lstdefinestyle{mystyle}{
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2,
+	frame = single
+}
+
+\lstset{style=mystyle}
+
+
+MySQL JDBC driver class \texttt{com.mysql.cj.jdbc.Driver} implements the \texttt{java.\-sql.\-Driver} interface from the standard Java library. This is a case where the user, \textit{connector-j}, is a client of the standard library API. It is not bypassing any access control, directly accessing a \emph{type} from its library, and the access is going from the client to the library.
+
+Shifting perspectives, \textit{connector-j} is intended for use as a library by its own clients. Its \texttt{Driver} implementation has a public constructor that can be \textit{directly instantiated} by its clients, as shown in line 1 of Listing~\ref{listing:direct-invocation}. It turns out that clients are not supposed to instantiate \texttt{Driver} classes themselves---JDBC documentation states that, for recent versions of JDBC, clients are supposed to call \texttt{DriverManager.getConnection()}. However, there are no compile-time or run-time checks prohibiting the instantiation of this object. We call this a \emph{modularity convention violation}. The part of the library that is being accessed is a class and the access is going from client (shown) to library (\texttt{connector-j}).  Although direct instantiation is not the intended use of the API, the library must provide a public constructor to enable service discovery.
+
+Continuing with our example, line 2 of the same Listing~\ref{listing:direct-invocation} shows a \textit{direct invocation}. Although this call is a virtual method invoke, the declared type and actual types will always coincide in this example. There is no access control bypass here, and this is a direct invocation of a method call from the client to the library. We also observe \emph{indirect invocations}, i.e. virtual invokes where declared and actual differ.
+
+%% In OO code, declared and actual types often differ, as seen at line 2 of Listing~\ref{listing:indirect-invocation}). The declared type is the interface \texttt{java.sql.Driver} while the actual type is class \texttt{com.mysql.cj.jdbc.Driver}. The only change between this \emph{indirect invocation} and the previous call is that the access is indirect, not direct. 
+
+%The Java Virtual machine also includes the invokedynamic instruction to allow programmable method dispatch. The Java compiler occasionally generates this instruction, e.g. for dynamic code idioms like lambdas. There is no explicit receiver object for an invokedynamic and we do not consider such calls.
+
+\lstinputlisting[language=Java,caption=Direct Instantiation and Invocation,label=listing:direct-invocation]{code-snippets/direct-invocation.java}
+
+%% \lstinputlisting[language=Java,caption=Indirect Invocation,label=listing:indirect-invocation]{code-snippets/direct-virtual-invocation.java}
+
+Our classification also allows for direct field accesses---from client to library or vice-versa (in the library to a client-provided parameter object). Of course, these may come with or without access control bypasses.
+
+\subsection{Reflection and Reflective API Bypasses}
+\label{ssec:api-usage-patterns:api-bypass}
+Java reflection provides an alternate way for users to access APIs, i.e. it is an alternate ``how" something is accessed. Reflective accesses exist in practice and are more challenging to analyze statically than vanilla usages, as investigated by Landman et al~\cite{landman17:_chall_static_analy_java_reflec}; however, Bodden et al~\cite{bodden2011taming} have presented pragmatic workarounds based on recording dynamic information and using it statically. Clients request a reflective handle to classes, methods (and constructors), and fields, and call certain Java API methods to access the thing behind the handle. Listing~\ref{listing:reflection} shows a reflective instantiation of a \texttt{Driver}; prior to JDBC 4, this used to be the recommended way of creating a JDBC driver, but has been superceded by using a \texttt{DriverManager} to get a connection. We understand that this is not explicitly forbidden, but it is deprecated.
+
+%% Instantiation, method invocation and field access is also possible through the reflection protocol in standard classes \texttt{Class}, \texttt{Method}, \texttt{Constructor} and \texttt{Field} in\texttt{ java.lang} and \texttt{java.lang.reflect}, respectively. We refer to these categories as \textit{INST-R}. \textit{INV-R }and \textit{FACC-R}, respectively. An example for reflective instantiation is shown in 
+
+\lstinputlisting[language=Java,caption={Instantiating a \texttt{java.sql.Driver} via reflection},label=listing:reflection]{code-snippets/reflection.java}
+
+Even if constructors, methods and fields and the classes declaring them are not visible, reflection can still be used to instantiate, invoke or access the respective things, subject to permission being granted by security managers. Listing~\ref{listing:reflection-private} shows the use of reflection to bypass access modifiers. While the class \texttt{ConnectionImpl} is public, the no-argument constructor has access modifier \texttt{protected}. However, reflection allows users to override access restrictions and call that constructor anyway. These are examples of a \textit{reflective API bypass pattern}. This call is thus a reflective-API-bypassing access to a constructor via reflection, from the client to the library. Line 3 makes the constructor accessible, using a pattern known as ``deep reflection''. Under Java 9, a user must provide a specific parameter to the JVM to allow such calls.
+
+Java has mechanisms for preventing unwanted reflective accesses in general. In addition to preventing deep reflection and providing security managers, Java 9 also displays warnings about illegal reflective accesses to JDK internals. (Reflection can, of course, also be used to make calls that are part of a library's published API.)
+
+\lstinputlisting[language=Java,caption=''Deep reflective'' instantiation bypassing visibility constraints,label=listing:reflection-private]{code-snippets/reflection-private.java}
+
+% interesting but maybe not our point; I said things about it above.
+%% Interestingly, prior to JDBC4, reflection was used to install a driver, consisting of the \texttt{Class.forName} call shown in line 1 of Listing~\ref{listing:reflection}. This triggered the execution of the static block of the respective class, leading to the instantiation and registration of the driver in  the JDBC  registry. 
+
+%\todo[inline]{java 9 has illegal-reflective-access warnings which protects JDK internals from reflection. also they call it ``deep reflection'' when you use setAccessible to access private members. --add-opens allows this in java 9}
+
+At this stage, we'd like to reiterate our goal in investigating API accesses. We've discussed vanilla API usages and reflective accesses to APIs. These two types of accesses have different affordances in terms of program evolution, and we aim to empirically evaluate how developers access libraries in practice, so that we (and others) can develop tools to help developers achieve more stability.
+
+Upon a breaking upgrade, a vanilla API usage will fail to compile. Reflection is more dynamic---developers have the power to query the system and to adapt to the actual versions of the components that they are interacting with. If they use this power, then their code can be more resilient. However, failures that do arise can be more subtle and severe. The same phenomenon is present in Rinard's acceptability-oriented computing~\cite{rinard03:_accep}.
+
+Dynamic techniques like reflection in data binding and persistence mapping pose additional perils. Even minor changes to classes can render data produced with previous versions un-readable. Adding, removing or modifying a field in a class mapped to a relational database table requires altering the table and migrating data. Adding a custom constructor (and thereby removing the default constructor) or removing a setter method may derail a deserialization mechanism based on the Java bean model (for example, \texttt{java.bean.XMLDecoder}). Binary serialization has long suffered from this problem. 
+
+\subsection{Restricting API surfaces: Services, Package Names and Package Exports}
+We mentioned that reflective instantiations of \texttt{Driver}s were recommended prior to JDBC 4. Post-JDBC 4, the recommendation is now to use the service loading mechanism to further reduce dependencies of clients on particular drivers. Specifically, the client is to use the \texttt{DriverManager} abstraction, which allows multiple drivers to bid on establishing a connection for a given database URL. (The client does not use the service loader directly.) 
+
+\lstinputlisting[language=Java,caption={\tt Driver} instantiation through a service loader,label=listing:service-loader]{code-snippets/service-loader.java}
+
+Service loading (described by Fowler in~\cite{fowler04:_inver_contr_contain_depen_injec}) is now widely used to register and access service implementations, for example, parsers, character sets, JDBC drivers, and JUnit5 extensions. 
+Listing~\ref{listing:service-loader} shows an example of a client requesting an available \texttt{Driver} from a service loader (and not the {\tt DriverManager}) and using that driver to request a jdbc MySQL connection.
+%Similar features for declarative services have been available for some time as part of OSGi~\footnote{OSGi services provide more features than Java service loading, including e.g. lifecycle management for services and the ability to wire, un- and rewire clients to the services they consume, but these are not relevant here.}. 
+
+%Libraries advertise services as part of their metadata. This advertises both the capabilities of a component and its intended API. [Do we need this?]
+
+Access modifiers are not the only way to protect APIs from being
+called directly by clients.  Java's namespace is segregated by
+hierarchical package names, but there are no enforced access controls
+in plain Java. The Java standard library does state the modularity convention
+that some of its implementation (specifically the classes living in
+the \texttt{sun.*} namespace) is not to be used by clients, but this
+convention is not enforced. Many libraries also use the convention that packages
+named \texttt{internal} are not for use by clients. 
+
+Java 
+9 modules~\cite{corporation17:_java_platf_modul_system_jsr} and OSGi~\cite{alliance20:_osgi_core_releas_specif} offer other ways to delimit an intended API, in terms of a set of exported
+packages. However, without enforcement, clients can use
+all of the methods and fields of their libraries.
+
+Enforcing the stated constraints requires additional support---either
+a Java 9+ runtime or an OSGi container implementation. The Java 9+
+compiler and runtime ensure that modules do not access modules to
+which they do not have access, for example, non-exported modules. Under Java
+9+, modules can also rely on having fine-grained control over
+reflection permissions. Similarly, under an OSGi container implementation,
+non-exported packages are invisible to other code in the same Java
+Virtual Machine, and this is enforced using the class loader
+mechanism. 
+
+We run all of our clients and libraries unprotected by Java 9 modules
+and OSGi containers---this is an opportunity to observe whether developers
+bypass the stated constraints or not. As we'll see in Section~\ref{sec:results}, 
+they almost universally do not bypass constraints.
+
+%% However, to enforce this (i.e. that clients only used API in those packages) requires a runtime to support this, i.e. an OSGi container (for components complying to OSGi, also known as \textit{bundles}), or a Java 9+ runtime. 
+
+%% In case of connector-j, OSGi meta data is created during the build, the respective exported packages are defined in the ANT build script  \texttt{build.xml}. 
+
+
+%% \todo[inline]{Do we have cases of library/client interactions via OSGi (as opposed
+%% to via declaring as a plain old Maven/Gradle dependency and making a
+%% normal method invoke?) If a client was using a library through OSGi
+%% then it wouldn't be able to violate the do-not-call restrictions, but
+%% it could cast a type to see more method implementations than it should
+%% be able to.} Actually I don't think that you can do the downcast trick with OSGi
+%% because you can't see the thing that you'd like to downcast to.
+
+By advertising services or exported packages, components define an intended API. Clients should not have any additional compile-time dependencies on the component beyond the intended API: any such additional dependencies become API bypasses. In particular, any of the following is an API bypass if it occurs in client code: 
+
+\begin{enumerate}
+	\item instantiation of a type declared in the component but not defined in the intended API;
+	\item reference to a type declared in the component (\texttt{T.class}; casts \texttt{(T)}; or uses of annotation types) not defined in the intended API;
+	\item invocations of method implementations which are not part of the intended APIs, following a downcast from an intended API to a private API; or,
+	\item accesses to fields not defined in the intended API.
+\end{enumerate}
+% declared in the components other then virtual calls of methods not declared in the component are resolved to methods declared in the component
+
+
+\subsection{Reversing Directions: Callbacks and Dependency Injection}
+We think of clients calling libraries. However, callbacks from libraries to clients are common in practice: the client provides an object to the library, and then library calls back a pre-defined method on the client. Callbacks are especially ubiquitous in languages like JavaScript, but do occur in Java code. Fowler~\cite{fowler05:_inver} uses the term ``framework'' to describe callback-heavy libraries that practice this Inversion of Control.
+% Many callbacks are based on the Observer pattern. - I don't think we need to say that.
+
+%While method invocations that are part of component interactions generally consist of clients invoking methods provided by some other component, this direction can be reversed when clients pass references to objects to be used in virtual calls. This popular pattern is based on the observer pattern, and often referred to as callbacks. It is particular popular in languages like JavaScript. 
+
+JDBC uses callbacks to tell its clients about events that happen to connections, as shown in Listing~\ref{listing:callback}. Call sites for callbacks live in the library \textit{connector-j}, and the respective invocations are virtual calls in JDBC resolved at runtime to invocations of methods that live in the client.
+
+\lstinputlisting[language=Java,caption=Callbacks in JDBC,label=listing:callback]{code-snippets/callback.java}
+
+Callbacks can be reflective. This is widely used in JSON and XML data binding and object-relational mapping. For instance, the \textit{jackson} object mapper and the XML serializer in the Java standard library can serialize instances of Java classes by exploiting reflection and Java Bean programming patterns. That is, the library accesses non-public fields in the client by discovering getters and invoking them dynamically, rather than reflectively reading the fields. Note the direction of the access---from library to client. This is an example of an API bypass that is not a mis-use.
+% it looks really ugly.
+%~\footnote{In jackson, this is implemented in \texttt{com.fasterxml.jackson.databind.ser.BeanPropertyWriter::serializeAsField}}. 
+%This creates reflective callbacks from an upstream component into a client.
+
+%\todo[inline]{Hey! From the writing here jackson and guava both access non-public fields, i.e. no difference. Is that true? -> jackson uses getters and setters, guava doesn't.}
+
+A popular alternative to \textit{jackson} is \textit{guava}. That library instead directly accesses even non-public fields, bypassing access restrictions\footnote{See \texttt{UnsafeReflectionAccessor::makeAccessible} in package \texttt{com.google.gson.internal.reflect}.} Note that the general idea of reversing the direction of API access is not restricted to method calls but also extends to fields.
+
+\subsection{Beyond Reflection}
+
+There are several other techniques that allow dynamically using code provided by libraries. Dynamic proxies (\texttt{java.lang.reflect.Proxy}) can be used to dynamically subtype existing types, with invocation handlers being used to provide any required method implementations.  This mimics protocols like Smalltalk's \texttt{doesNotUnderstand}, and was originally used to provide stubs for remote object protocols like RMI and CORBA, and later in some mock object frameworks. However, usage is rather rare~\cite{dietrich2017xcorpus}, and modern remoting and mock testing frameworks (in particular, protocol buffers and mockito) use some form of code generation instead. 
+
+An older dynamic mechanism is the \texttt{sun.misc.Unsafe} API. Mastrangelo et al~\cite{mastrangelo15:_use_your_own_risk} pointed out that Java's undocumented 
+\texttt{Unsafe} API was extensively used in practice to circumvent the safety properties guaranteed by the Java Virtual Machine. Since then, this API has been migrated to a \texttt{jdk.unsupported} module, and Evans~\cite{evans20:_unsaf} noted that many of the features have been  migrated into supported Java APIs.
+
+The \texttt{invokedynamic} instruction can also be used as an intermediate mechanism to access APIs via custom dispatch. However, the usage patterns defined by the current Java compiler restrict the use to the compilation of lambdas and string concatenation only.  There might be more interesting API access patterns in clients compiled with non-Java compilers (such as Kotlin), but this is outside the scope of this study. 
+
+
+%\todo[inline]{I don't actually think dynamic proxies are very interesting in terms of API bypasses, but I think that unsafe is good to talk about here.}
+
+%Several advanced techniques are available to as alternatives to reflection. This is driven either by performance consideration, or by the need to create functinality at runtime (instead of just querying the object model). A typical use case here is to replace an interpreter by a more performant compiler for some domain specific language. 
+
+
+
+%\todo[inline] { Jens $\rightarrow$ Pat: can we move this to related work, it does not fit well into the story here
+%For our purposes, Mastrangelo et al observed two potentially relevant\texttt{Unsafe} usage patterns: (1) serialization/deserialization, and (2) load class without security checks.  Serialization is ubiquitous, being transitively used in 5689 of 21287 artifacts. Loading without security checks was much less common, transitively used in 294 of 21287 artifacts. A third pattern is extremely common but, we claim, unlikely to lead to modularity violations---allocating objects without calling their constructors, used in mocking and deserialization. }
+
+%\todo[inline] { Jens $\rightarrow$ Pat: I would not mention modularity here because we dont really discuss this, instead we should state whether it can violate API access restrctions In principle, \texttt{Unsafe} or its newer equivalents could be used to violate modularity. However, we believe that the patterns observed in practice are unlikely to correspond to actual violations. }
+
+In principle, \texttt{Unsafe} or its newer equivalents could be used to bypass API access restrictions. However, we believe that the patterns observed in practice are unlikely to correspond to actual violations.
+
+% OK, so dynamic code generation could be a thing that matters sometimes, but not often enough that we want to talk about it here.
+
+% However, modern mock object frameworks like Mockito often use the on-the-fly generation of  classes. This is facilitaed by the availability of modern bytecode engineering libraries like ByteBuddy\footnote{\url{https://bytebuddy.net/}} that make it very easy to create and load classes at runtime. Other examples for using runtime code generation include high-performance expression engines (MVEL), and the Xalan XSLT cmpiler creating the aptly named GregorSamsa classes~\footnote{\url{https://xml.apache.org/xalan-j/xsltc/xsltc_native_api.html}}. 
+
+% \todo[inline]{I think we don't quite have alignment on what we're trying to say here. I think that Unsafe fits here while on-the-fly generation of classes doesn't.}
+
+% \todo[inline] {Jens: should we also at least mention invokedynamic here ? Not an issue with the Java compiler, but perhaps for oother JVM languages. PL: I don't see how it's particularly relevant here. It's just a method call. At best it's another alternative for ``how'' is it accessed, but really it is just indirect.}
+
+
+
+
+
 \section{Visualization}
 \label{sec:visualization}
 We now present the VizAPI tool, which shows visualization overviews depicting API usages---namely, usages of clients by libraries for the most part, but also inter-library usages (which includes usages of transitive dependencies by libraries). The goal of VizAPI is to provide information for developers considering the impacts of changes to libraries.
