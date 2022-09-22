@@ -299,14 +299,14 @@ We also discuss our benchmark selection process in this section.
 \subsection{Static Analysis and Instrumentation}
 \label{sec:methodology}
 
-We use Javassist~\cite{chiba00:_load_struc_reflec_java} and perform class hierarchy analysis on clients
+We use Javassist~\cite{chiba00:_load_struc_reflec_java} to perform class hierarchy analysis on clients
 and create a static call graph. We collect data about client usages of libraries by running client
 test suites under instrumentation. The instrumentation records API
 uses which cross client/library boundaries, closely mirroring the API
 usage patterns that we describe in
 Section~\ref{sec:patterns}. We also use Javassist for instrumentation,
-and the build system of each project (Maven) is used to run its
-tests and we obtain dynamic call graphs. 
+modifying the build system of each project (Maven) to run instrumented
+tests and obtain dynamic call graphs. 
 \\
 
 \begin{figure*}[h]
@@ -392,10 +392,10 @@ We capture reflective uses of the \texttt{Class} object by intercepting calls to
 \texttt{java.lang.Class.forName()} and \texttt{java.lang.ClassLoader.loadClass()}.
 
 \paragraph{Service Loaders} We are particularly interested in bypasses of 
-services using \texttt{ServiceLoader}. Before the instrumentation, we record a list 
+services that use the \texttt{ServiceLoader} API. Before the instrumentation, we record a list 
 of services and their implementations by inspecting files in \texttt{src/main/resources/META-INF/services}.
 With this information, we look for service bypasses which are direct uses of service implementation 
-classes in clients either through instantiations, casts or reflection. We also intercept calls 
+classes in clients, either through instantiations, casts or reflection. We also intercept calls 
 to method \texttt{load()} in classes with name \texttt{Service*Loader} and record any calls to methods beyond 
 the published interface.
 
@@ -431,7 +431,7 @@ repositories in different categories such as logging, json parsing and databases
 \begin{center}
 \caption{\label{tab:libs}Libraries that we investigated for API usage and mis-usage patterns}
 \begingroup\scriptsize	
-\hskip-2.0cm
+\hspace*{-0.6cm}
 \begin{tabular}{l!{\color{verylightgray}\vrule}cl!{\color{verylightgray}\vrule}rr!{\color{verylightgray}\vrule}ccc}
 & & & non-test &  & Service & Java 9 &  \\
 Library & version & description   & kLOC     & \# classes  &  Loader  & modules & OSGi \\ \arrayrulecolor{verylightgray}\hline
