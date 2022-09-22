@@ -2,17 +2,10 @@
 \chapter{Conclusion}
 \label{sec:conclusion}
 %======================================================================
-The goal of this work was to enable 1) library developers to make better
+The goal of this work was to potentially enable 1) library developers to make better
 decisions when designing new APIs, pruning or modifying unused APIs and to refactor their
 libraries; and 2) client developers to make better decisions about library
 upgrades and breaking changes.
-
-Further user evaluations of our VizAPI tool can establish and improve the
-effectiveness of VizAPI. This can be performed following
-existing techniques~\cite{merino18:_system_liter_review_softw_visual_evaluat}; in
-particular, experiments, where users perform software
-understanding and maintenance tasks.
-
 
 \section{Threats to Validity}
 Our threats to validity include the usual threat to external validity
@@ -28,7 +21,8 @@ all possible static calls---possibly too many.
 That is, the main hazard with static analysis is that our visualization may include more
 static edges than are actually possible. Some of those edges could be ruled out by a more
 precise call graph. Reflection aside, no static edges
-are missing (our approach is ``soundy''~\cite{livshits15:_in_defen_sound} with respect to static information). On the other hand, dynamic edges have actually been observed
+are missing (our approach is ``soundy''~\cite{livshits15:_in_defen_sound} with respect to static information). 
+On the other hand, dynamic edges have actually been observed
 on some execution; better tests could yield more dynamic edges. But even if
 a dynamic edge is missing, there will be a static edge if the behaviour is possible.
 
@@ -44,8 +38,8 @@ Based on our exploration of API uses and mis-uses, we make some recommendations
 for both API and language/analysis designers.
 
 \begin{enumerate}
-\item API scope: given that both we and Thummalapenta and Xie~\cite{thummalapenta08:_spotw} find
-that APIs are sparsely used, API designers can seek to prune unused APIs;
+\item API scope: While some APIs are included in libraries for the sake of completeness, given that both we and Thummalapenta and Xie~\cite{thummalapenta08:_spotw} find
+that APIs are sparsely used, API designers can seek to prune certain unused APIs;
 \item Refactoring: our results show that library fission is useful, i.e., some existing APIs can be split into loosely-connected parts, reducing effective API surface and potentially developer cognitive burden;
 \item Deprecation: one could investigate the scope for aggressive deprecation of unused APIs in released libraries, giving more liberty to API designers to modify their code;
 \item Modularity: API and language designers can be confident that stated encapsulation boundaries are respected.
@@ -61,4 +55,15 @@ that APIs are sparsely used, API designers can seek to prune unused APIs;
 %% \item Restrict the declared API to an actually-used subset and support deprecation of unused API bits.
 %% \end{enumerate}
 
-We studied API usage in detail in this work and explored its usefulness by presenting two developer-focussed applications of it. We found that clients do not access internal parts of libraries for the most part. We also found that clients use only a small part of existing APIs and also that different clients use different parts of libraries with only a small overlap. This result makes a case for library fission, which we observed has the benefits of reduced dependencies in an application. We also presented the VizAPI visualization tool, which can be used by developers to observe API usage in their components.
+\section{Directions for Future Work}
+In our study of API usage in our set of benchmarks, we find that APIs are sparsely used. 
+This corroborates the same finding in Thummalapenta and Xie~\cite{thummalapenta08:_spotw}'s work.
+We also see that our clients call into parts of libraries with a limited but nonzero overlap. 
+An interesting experiment would be to plot cumulative usage as the number of clients increases and observe if the percentage of APIs used reaches a saturation
+point.
+
+Further user evaluations of our VizAPI tool can establish and improve the
+effectiveness of VizAPI. This can be performed following
+existing techniques~\cite{merino18:_system_liter_review_softw_visual_evaluat}; in
+particular, experiments, where users perform software
+understanding and maintenance tasks.
