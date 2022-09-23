@@ -1,0 +1,40 @@
+TODO: talk about why certain apis are used, find the paper about tests exercising library usage, read through everything to see if we need to tone down any other claims
+
+✓ I had thought that it would be interesting to see a "cumulative usage" plot: as you add clients, does the % of the API used reach a saturation point? (Clearly you can't do that experiment, but you can mention it in response to some of the points here)
+
+✓ Mei had said that we could see less summary and more discussion in conclusions in general and yours in particular.
+
+* My observation: Transitive calls: note that whether we care about this depends a bit on the applications: we care more when we're worrying about vulnerabilities, but less when we are trying to fission.
+
+* classification of API uses: Mei wanted to know why this classification; say that, and also mention that we were thinking about misuses at that point (we have an explicit dimension about misuses, but it also was also the overall focus)
+-> I guess there is a paragraph just before 2.2 starts that does that, but doesn't include discussion about how we were thinking about misuses. Maybe put that paragraph after the first sentence of 2.1 so we explain why before we do it (and split the paragraph). I think I wouldn't use "who want to introspect about their software", that sounds kind of weird. Maybe a better verb is "who want to understand their software's interactions".
+
+* There was a discussion about new libraries and getting a set of clients, which may be hard; you should discuss the process of, from a library developer's point of view, getting a suitable set of clients. As an empirical study, it's hard to avoid the need to work on some client set.
+-> did you do this?
+
+* Need to qualify the claims about usefulness, since we haven't done any user studies -> potential usefulness
+-> where was this?
+
+✓ Add limitation about how interpreting graphs is hard.
+-> usage-scenarios.tex "A limitation of this tool"
+
+* Cite Mike Godfrey and Eric Lee's work (circa 2000) on restructuring code and developer resistance to it. I don't know if you say it in the thesis, but also include things about how the window is when devs are planning breaking major changes anyway.
+
+* It also wasn't clear to Mei that there should be no perf changes; we're just adding visibility limitations basically. So say something about that.
+-> ?
+
+* Define breaking change; I think it includes semantic changes as well (but you don't). -> "Upon a breaking upgrade, a vanilla API usage will fail to compile." in 2.2.2 doesn't include semantic changes, but I think that's wrong.
+
+✓ Mike had a good point about APIs being included for completeness purposes even though even upstream doesn't think they'll ever be used. Include a comment on that. It's too bad we don't have results on it. In fact it's kind of an incidental finding from our perspective, but would be interesting to know more about.
+
+* And, why are certain APIs used?
+-> future work
+
+* More discussion on test suites as a reasonable usage of the client and of the library. I think Jens has work justifying the usage of the client test suites as something that explores the library's behaviour.
+-> ?
+
+* There was a statement about package usage controls that's probably wrong. That statement is currently on page 11 ("Java's namespace is segregated by hierarchical package names".)
+
+* Again on the "why", might be good to spend 5 minutes investigating why there are accesses to non-constant fields by a client to a library. Is it just reads or are there writes too? I know that ASM for instance chose to have fields be accessible because they didn't want to impose the old-school overhead of everything being a method.
+
+* the sentence in 2.4.2 "This result makes a convincing argument..." is convoluted and should be rewritten.
