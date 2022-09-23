@@ -2,7 +2,7 @@
 \chapter{Conclusion}
 \label{sec:conclusion}
 %======================================================================
-The goal of this work was to potentially enable 1) library developers to make better
+The goal of this work was to enable 1) library developers to make better
 decisions when designing new APIs, pruning or modifying unused APIs and to refactor their
 libraries; and 2) client developers to make better decisions about library
 upgrades and breaking changes.
@@ -13,9 +13,15 @@ of insufficient sample size or variety---many of our seed libraries
 are JSON parser/generators, although our transitive closures result in
 a wider range of domains.
 
-There is also the construct validity issue that tests may
-not adequately represent actual client behaviours. However, our use of both static
-and dynamic information addresses this issue. Specifically, because we use
+There is also the construct validity issue: tests may
+not adequately represent actual client behaviours. 
+Dietrich et al discuss this in their work~\cite{dietrich2017construction}; 
+they find that coverage by unit tests is low, 
+but is made up for by the fact that programmers are likely to write tests for the more relevant parts of the code.
+.
+Our use of both static
+and dynamic information addresses the issue of low coverage. 
+Specifically, because we use
 class hierarchy analysis for our static analysis, our visualization will present
 all possible static calls---possibly too many. 
 That is, the main hazard with static analysis is that our visualization may include more
@@ -38,10 +44,10 @@ Based on our exploration of API uses and mis-uses, we make some recommendations
 for both API and language/analysis designers.
 
 \begin{enumerate}
-\item API scope: While some APIs are included in libraries for the sake of completeness, given that both we and Thummalapenta and Xie~\cite{thummalapenta08:_spotw} find
-that APIs are sparsely used, API designers can seek to prune certain unused APIs;
-\item Refactoring: our results show that library fission is useful, i.e., some existing APIs can be split into loosely-connected parts, reducing effective API surface and potentially developer cognitive burden;
-\item Deprecation: one could investigate the scope for aggressive deprecation of unused APIs in released libraries, giving more liberty to API designers to modify their code;
+\item API scope: Both we and Thummalapenta and Xie~\cite{thummalapenta08:_spotw} find
+that APIs are sparsely used. While some APIs are included in libraries for the sake of completeness (e.g. implementing all methods on an interface even if they are never expected to be called), API designers can seek to prune  unused APIs that have no conceptual reason to exist; 
+\item Deprecation: One could investigate the scope for aggressive deprecation of unused APIs in released libraries, giving more liberty to API designers to modify their code;
+\item Refactoring: Our results show that library fission could be useful, i.e., some existing APIs can be split into loosely-connected parts, reducing effective API surface and potentially developer cognitive burden;
 \item Modularity: API and language designers can be confident that stated encapsulation boundaries are respected.
 \end{enumerate}
 %Encapsulation is a fundamental building block for software systems. API boundaries are an important way to enforce encapsulation, and our results show how developers interact with API boundaries in practice.
@@ -65,5 +71,5 @@ point.
 Further user evaluations of our VizAPI tool can establish and improve the
 effectiveness of VizAPI. This can be performed following
 existing techniques~\cite{merino18:_system_liter_review_softw_visual_evaluat}; in
-particular, experiments, where users perform software
+particular, experiments where users perform software
 understanding and maintenance tasks.

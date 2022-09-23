@@ -12,32 +12,6 @@
   publisher={IEEE}
 }
 
-@book{goossens.book,
-	author =	"Michel Goossens and Frank Mittelbach and 
-			 Alexander Samarin",
-	title =		"The \LaTeX\ Companion",
-	year = 		"1994",
-	publisher =	"Addison-Wesley",
-	address = 	"Reading, Massachusetts"
-}
-
-@book{knuth.book,
-        author =        "Donald Knuth",
-        title =         "The \TeX book",
-        year =          "1986",
-        publisher =     "Addison-Wesley",
-        address =       "Reading, Massachusetts"
-}
-
-@book{lamport.book,
-	author =        "Leslie Lamport",
-	title =         "\LaTeX\ --- A Document Preparation System",
-        edition =       "Second",
-	year = 		"1994",
-	publisher = 	"Addison-Wesley",
-	address =       "Reading, Massachusetts"
-}
-
 
 @inproceedings{10.1145/2814270.2814313,
 author = {Mastrangelo, Luis and Ponzanelli, Luca and Mocci, Andrea and Lanza, Michele and Hauswirth, Matthias and Nystrom, Nathaniel},
@@ -69,7 +43,7 @@ to regain safety in Java. },
 booktitle = {Proceedings of the 2015 ACM SIGPLAN International Conference on Object-Oriented Programming, Systems, Languages, and Applications},
 pages = {695–710},
 numpages = {16},
-keywords = {patterns, unsafe, Java, Maven Central, mining, Stack Overflow},
+keywords = {patterns, unsafe, Java, {Maven} Central, mining, Stack Overflow},
 location = {Pittsburgh, PA, USA},
 series = {OOPSLA 2015}
 }
@@ -216,7 +190,7 @@ location = {Helsinki, Finland},
 
 
 @inproceedings{raemaekers2014semantic,
-	title={Semantic versioning versus breaking changes: A study of the maven repository},
+	title={Semantic versioning versus breaking changes: A study of the {Maven} repository},
 	author={Raemaekers, Steven and Van Deursen, Arie and Visser, Joost},
 	booktitle={SCAM},
 	pages={215--224},
@@ -252,7 +226,7 @@ location = {Helsinki, Finland},
 
 @inproceedings{chinthanet20:_code_based_vulner_detec_node,
 author = {Chinthanet, Bodin and Ponta, Serena Elisa and Plate, Henrik and Sabetta, Antonino and Kula, Raula Gaikovina and Ishio, Takashi and Matsumoto, Kenichi},
-title = {Code-Based Vulnerability Detection in Node.Js Applications: How Far Are We?},
+title = {Code-Based Vulnerability Detection in {Node.Js} Applications: How Far Are We?},
 year = 2020,
 isbn = 9781450367684,
 publisher = {Association for Computing Machinery},
@@ -319,7 +293,7 @@ series = {ASE '20}
 
 @techreport{fitzgerald2000marmot,
 author = {Fitzgerald, Bob and Knoblock, Todd B. and Ruf, Erik and Steensgaard, Bjarne and Tarditi, David},
-title = {Marmot: An Optimizing Compiler for Java},
+title = {Marmot: An Optimizing Compiler for {Java}},
 year = {2000},
 month = {March},
 abstract = {The Marmot system is a research platform for studying the implementation of high level programming languages. It currently comprises an optimizing native code compiler, runtime system, and libraries for a large subset of Java. Marmot integrates well-known representation, optimization, code generation, and runtime techniques with a few Java-specific features to achieve competitive performance. This paper contains a description of the Marmot system design, along with highlights of our experience applying and adapting traditional implementation techniques to Java. A detailed performance evaluation assesses both Marmot's overall performance relative to other Java and C++ implementations, and the relative costs of various Java language features in Marmot-compiled code. Our experience with Marmot has demonstrated that well-known compilation techniques can produce very good performance for static Java applications comparable or superior to other Java systems, and approaching that of C++ in some cases.},
@@ -358,7 +332,7 @@ publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
 url = {https://doi.org/10.1145/3236024.3275535},
 doi = {10.1145/3236024.3275535},
-abstract = {Software engineering practices have evolved to the point where a developer writing a new application today doesn’t start from scratch, but reuses a number of open source libraries and components. These third-party libraries evolve independently of the applications in which they are used, and may not maintain stable interfaces as bugs and vulnerabilities in them are fixed. This in turn causes API incompatibilities in downstream applications which must be manually resolved. Oversight here may manifest in many ways, from test failures to crashes at runtime. To address this problem, we present a static analysis for automatically and efficiently checking if a library upgrade introduces an API incompatibility. Our analysis does not rely on reported version information from library developers, and instead computes the actual differences between methods in libraries across different versions. The analysis is scalable, enabling real-time diff queries involving arbitrary pairs of library versions. It supports a vulnerability remediation product which suggests library upgrades automatically and is lightweight enough to be part of a continuous integration/delivery (CI/CD) pipeline. To evaluate the effectiveness of our approach, we determine semantic versioning adherence of a corpus of open source libraries taken from Maven Central, PyPI, and RubyGems. We find that on average, 26% of library versions are in violation of semantic versioning. We also analyze a collection of popular open source projects from GitHub to determine if we can automatically update libraries in them without causing API incompatibilities. Our results indicate that we can suggest upgrades automatically for 10% of the libraries.},
+abstract = {Software engineering practices have evolved to the point where a developer writing a new application today doesn’t start from scratch, but reuses a number of open source libraries and components. These third-party libraries evolve independently of the applications in which they are used, and may not maintain stable interfaces as bugs and vulnerabilities in them are fixed. This in turn causes API incompatibilities in downstream applications which must be manually resolved. Oversight here may manifest in many ways, from test failures to crashes at runtime. To address this problem, we present a static analysis for automatically and efficiently checking if a library upgrade introduces an API incompatibility. Our analysis does not rely on reported version information from library developers, and instead computes the actual differences between methods in libraries across different versions. The analysis is scalable, enabling real-time diff queries involving arbitrary pairs of library versions. It supports a vulnerability remediation product which suggests library upgrades automatically and is lightweight enough to be part of a continuous integration/delivery (CI/CD) pipeline. To evaluate the effectiveness of our approach, we determine semantic versioning adherence of a corpus of open source libraries taken from {Maven} Central, PyPI, and RubyGems. We find that on average, 26% of library versions are in violation of semantic versioning. We also analyze a collection of popular open source projects from GitHub to determine if we can automatically update libraries in them without causing API incompatibilities. Our results indicate that we can suggest upgrades automatically for 10% of the libraries.},
 booktitle = {FSE},
 pages = {791–796},
 numpages = 6,
@@ -368,7 +342,7 @@ location = {Lake Buena Vista, FL, USA},
 
 @inproceedings{bruce20:_jshrin,
 author = {Bruce, Bobby R. and Zhang, Tianyi and Arora, Jaspreet and Xu, Guoqing Harry and Kim, Miryung},
-title = {JShrink: In-Depth Investigation into Debloating Modern Java Applications},
+title = {{JShrink}: In-Depth Investigation into Debloating Modern {Java} Applications},
 year = 2020,
 isbn = 9781450370431,
 publisher = {Association for Computing Machinery},
@@ -423,7 +397,7 @@ keywords = {Application extraction, packaging, whole-program analysis, class hie
   author    = {Thomas Durieux and
 C{\'{e}}sar Soto{-}Valero and
 Benoit Baudry},
-title     = {{DUETS:} {A} Dataset of Reproducible Pairs of Java Library-Clients},
+title     = {{DUETS:} {A} Dataset of Reproducible Pairs of {Java} Library-Clients},
 year      = {2021},
 	Comment = {<b>Data showcase award</b>},
 	booktitle={MSR},
@@ -458,7 +432,7 @@ year      = {2021},
 
 @Misc{mullans20:_keep_depen,
   author =    {Alex Mullans},
-  title =     {Keep all your packages up to date with Dependabot},
+  title =     {Keep all your packages up to date with {Dependabot}},
   howpublished = {GitHub blog: \url{https://github.blog/2020-06-01-keep-all-your-packages-up-to-date-with-dependabot/}},
   month =     {June},
   year =      2020}
@@ -553,7 +527,7 @@ journal = {SIGPLAN Not.},
 month = oct,
 pages = {695–710},
 numpages = 16,
-keywords = {mining, patterns, Maven Central, Stack Overflow, unsafe, Java}
+keywords = {mining, patterns, {Maven} Central, Stack Overflow, unsafe, Java}
 }
 
 @Article{zhong19:_empir_study_api_usages,
@@ -581,7 +555,7 @@ keywords = {mining, patterns, Maven Central, Stack Overflow, unsafe, Java}
 
 @inproceedings{duala-ekoko12:_askin_answer_quest_unfam_apis,
 author = {Duala-Ekoko, Ekwa and Robillard, Martin P.},
-title = {Asking and Answering Questions about Unfamiliar APIs: An Exploratory Study},
+title = {Asking and Answering Questions about Unfamiliar {APIs}: An Exploratory Study},
 year = 2012,
 isbn = 9781467310673,
 publisher = {IEEE Press},
@@ -627,7 +601,7 @@ series = {MSR '18}
 }
 
 @inproceedings{decan2017empirical,
-	title={An empirical comparison of dependency issues in OSS packaging ecosystems},
+	title={An empirical comparison of dependency issues in {OSS} packaging ecosystems},
 	author={Decan, Alexandre and Mens, Tom and Claes, Ma{\"e}lick},
 	booktitle={2017 IEEE 24th International Conference on Software Analysis, Evolution and Reengineering (SANER)},
 	pages={2--12},
@@ -709,3 +683,25 @@ series = {MSR '18}
   booktitle={VISSOFT}, 
   title={A Domain-Specific Language for Visualizing Software Dependencies as a Graph}, 
   year=2014}
+
+@inproceedings{tran2000architectural,
+  title={Architectural repair of open source software},
+  author={Tran, John B and Godfrey, Michael W and Lee, Eric HS and Holt, Richard C},
+  booktitle={Proceedings IWPC 2000. 8th International Workshop on Program Comprehension},
+  pages={48--59},
+  year={2000},
+  organization={IEEE}
+}
+
+@article{venkatanarayananvizapi,
+  title={{VizAPI}: Visualizing Interactions between Java Libraries and Clients},
+  author={Venkatanarayanan, Sruthi and Dietrich, Jens and Anslow, Craig and Lam, Patrick}
+}
+
+@inproceedings{dietrich2017construction,
+  title={On the construction of soundness oracles},
+  author={Dietrich, Jens and Sui, Li and Rasheed, Shawn and Tahir, Amjed},
+  booktitle={Proceedings of the 6th ACM SIGPLAN International Workshop on State Of the Art in Program Analysis},
+  pages={37--42},
+  year={2017}
+}
