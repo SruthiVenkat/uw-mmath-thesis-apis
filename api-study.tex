@@ -97,8 +97,8 @@ continuum rather than as a strict binary allowed-versus-not-allowed.
 Some uses are more appropriate than others: when a
 client passes an object to a serialization library, it is asking
 the library to access even the private fields of that object, and so this
-does not constitute a mis-use. Calling a deprecated API is less clear-cut.
-Finally, explicitly calling into internal classes is likely to be a mis-use.
+does not constitute a misuse. Calling a deprecated API is less clear-cut.
+Finally, explicitly calling into internal classes is likely to be a misuse.
 All bypasses some incur technical debt and add to the project's risk,
 but some bypasses are more risky than others.
 
@@ -149,6 +149,7 @@ Our classification also allows for direct field accesses---from client to librar
 \label{ssec:api-usage-patterns:api-bypass}
 Java reflection provides an alternate way for users to access APIs, i.e. it is an alternate ``how" something is accessed. Reflective accesses exist in practice and are more challenging to analyze statically than vanilla usages, as investigated by Landman et al~\cite{landman17:_chall_static_analy_java_reflec}; however, Bodden et al~\cite{bodden2011taming} have presented pragmatic workarounds based on recording dynamic information and using it statically. Clients request a reflective handle to classes, methods (and constructors), and fields, and call certain Java API methods to access the thing behind the handle. Listing~\ref{listing:reflection} shows a reflective instantiation of a \texttt{Driver}; prior to JDBC 4, this used to be the recommended way of creating a JDBC driver, but has been superceded by using a \texttt{DriverManager} to get a connection. We understand that this is not explicitly forbidden, but it is deprecated.
 
+
 %% Instantiation, method invocation and field access is also possible through the reflection protocol in standard classes \texttt{Class}, \texttt{Method}, \texttt{Constructor} and \texttt{Field} in\texttt{ java.lang} and \texttt{java.lang.reflect}, respectively. We refer to these categories as \textit{INST-R}. \textit{INV-R }and \textit{FACC-R}, respectively. An example for reflective instantiation is shown in 
 
 \lstinputlisting[language=Java,caption={Instantiating a \texttt{java.sql.Driver} via reflection},label=listing:reflection]{code-snippets/reflection.java}
@@ -156,6 +157,7 @@ Java reflection provides an alternate way for users to access APIs, i.e. it is a
 Even if constructors, methods and fields and the classes declaring them are not visible, reflection can still be used to instantiate, invoke or access the respective things, subject to permission being granted by security managers. Listing~\ref{listing:reflection-private} shows the use of reflection to bypass access modifiers. While the class \texttt{ConnectionImpl} is public, the no-argument constructor has access modifier \texttt{protected}. However, reflection allows users to override access restrictions and call that constructor anyway. These are examples of a \textit{reflective API bypass pattern}. This call is thus a reflective-API-bypassing access to a constructor via reflection, from the client to the library. Line 3 makes the constructor accessible, using a pattern known as ``deep reflection''. Under Java 9, a user must provide a specific parameter to the JVM to allow such calls.
 
 Java has mechanisms for preventing unwanted reflective accesses in general. In addition to preventing deep reflection and providing security managers, Java 9 also displays warnings about illegal reflective accesses to JDK internals. (Reflection can, of course, also be used to make calls that are part of a library's published API.)
+
 
 \lstinputlisting[language=Java,caption=''Deep reflective'' instantiation bypassing visibility constraints,label=listing:reflection-private]{code-snippets/reflection-private.java}
 
@@ -244,7 +246,7 @@ JDBC uses callbacks to tell its clients about events that happen to connections,
 
 \lstinputlisting[language=Java,caption=Callbacks in JDBC,label=listing:callback]{code-snippets/callback.java}
 
-Callbacks can be reflective. This is widely used in JSON and XML data binding and object-relational mapping. For instance, the \textit{jackson} object mapper and the XML serializer in the Java standard library can serialize instances of Java classes by exploiting reflection and Java Bean programming patterns. That is, the library accesses non-public fields in the client by discovering getters and invoking them dynamically, rather than reflectively reading the fields. Note the direction of the access---from library to client. This is an example of an API bypass that is not a mis-use.
+Callbacks can be reflective. This is widely used in JSON and XML data binding and object-relational mapping. For instance, the \textit{jackson} object mapper and the XML serializer in the Java standard library can serialize instances of Java classes by exploiting reflection and Java Bean programming patterns. That is, the library accesses non-public fields in the client by discovering getters and invoking them dynamically, rather than reflectively reading the fields. Note the direction of the access---from library to client. This is an example of an API bypass that is not a misuse.
 % it looks really ugly.
 %~\footnote{In jackson, this is implemented in \texttt{com.fasterxml.jackson.databind.ser.BeanPropertyWriter::serializeAsField}}. 
 %This creates reflective callbacks from an upstream component into a client.
@@ -491,7 +493,7 @@ For instance, \texttt{rocketmq-acl} makes private field \texttt{SendMessageReque
 \texttt{rocketmq-common} accessible before accessing it. Such inter-module accesses are more controlled than client/library accesses since they are within the same project,
 but are still a form of technical debt.
 
-We investigated all \texttt{setAccessible()} calls on fields that belong to in \emph{rocketmq}. (\emph{rocketmq} is a client that calls \emph{fastjson}). These calls are made from the library to the client, i.e., accesses are from library \emph{fastjson} to client \emph{rocketmq} using callbacks. We see hundreds of \texttt{setAccessible()} calls being executed when the client tests are run. The \emph{rocketmq} source code shows 6 classes with calls to \texttt{setAccessible()}: a serialization/deserialization pair for the \texttt{CommandCustomHeader} class, 2 methods which appear to print out the state of an object for debugging or logging purposes, and 2 methods which store a reference to a specified field or which call a specified method, provided in those methods' parameters. We would not characterize the first 4 API bypasses as mis-uses, and it is not obvious that the last 2 are mis-uses either. Another interesting use of \texttt{setAccessible()} on a field is by \emph{benchmark-thrift} to access the field \texttt{maxLength\_}  which is a class member of the class \texttt{TFramedTransport} belonging to Apache \emph{thrift}. This is a private field and the default maximum length is overridden by the client.
+We investigated all \texttt{setAccessible()} calls on fields that belong to in \emph{rocketmq}. (\emph{rocketmq} is a client that calls \emph{fastjson}). These calls are made from the library to the client, i.e., accesses are from library \emph{fastjson} to client \emph{rocketmq} using callbacks. We see hundreds of \texttt{setAccessible()} calls being executed when the client tests are run. The \emph{rocketmq} source code shows 6 classes with calls to \texttt{setAccessible()}: a serialization/deserialization pair for the \texttt{CommandCustomHeader} class, 2 methods which appear to print out the state of an object for debugging or logging purposes, and 2 methods which store a reference to a specified field or which call a specified method, provided in those methods' parameters. We would not characterize the first 4 API bypasses as misuses, and it is not obvious that the last 2 are misuses either. Another interesting use of \texttt{setAccessible()} on a field is by \emph{benchmark-thrift} to access the field \texttt{maxLength\_}  which is a class member of the class \texttt{TFramedTransport} belonging to Apache \emph{thrift}. This is a private field and the default maximum length is overridden by the client.
 
 We found that 23\% of the calls to \texttt{setAccessible()} were on methods. Of those, only 2 distinct methods that were reflectively invoked were previously not accessible. We manually inspected all of the reflective callers of these 2 methods. Protected method \texttt{Node.setParentNode()} in \emph{jsoup} is called from code in \texttt{org.seimicrawler.xpath} in \emph{JsoupXpath}. This appears to be test code committed to the main repository. The next method is the default-visibility method \texttt{getInstance()}. This method is used to obtain a singleton instance of {\tt ReflectionNavigator} from within the same project. The motivation for developers calling \texttt{setAccessible} within the same project is unclear to us, rather than modifying the code themselves. This work can help developers identify such instances and possibly refactor their code.
 
@@ -572,7 +574,7 @@ We have mainly focussed on ``why not'', i.e. what mechanisms clients use to bypa
 
 \subsection{Extent of API usage}
 Continuing with our investigation of API surfaces, but moving from
-mis-uses to uses, we present results on API use.
+misuses to uses, we present results on API use.
 %, again using results obtained from our instrumentation.
 
 Table~\ref{tab:usage-distribution} presents the usage distribution of
