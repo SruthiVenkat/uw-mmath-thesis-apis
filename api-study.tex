@@ -55,7 +55,9 @@ we can see that the actual API surface includes classes
 \section{Classification of API Uses}
 \label{sec:classification}
 
-Before we look at API usage patterns, we first present our classification framework for classifying API uses. This conceptual framework that outlines four dimensions along which a potential API use can be classified. We phrase the four dimensions as questions; each API usage has an answer for each of the questions. They are as follows: \emph{what}, \emph{how} \emph{which way} and \emph{why not}?
+Before we look at API usage patterns, we first present our classification framework for classifying API uses and also to understand if an API use is a misuse. We intend for this framework to serve as a guideline for component developers who want to understand their software's interactions with other components. Library developers can use this framework when they design new APIs to understand which parts of their library are most useful to clients and how. Client developers can use this framework to inspect how libraries are used and possibly to compare and contrast different libraries with the same functionality.
+
+This conceptual framework outlines four dimensions along which a potential API use can be classified. We phrase the four dimensions as questions; each API usage has an answer for each of the questions. They are as follows: \emph{what}, \emph{how} \emph{which way} and \emph{why not}?
 
 \begin{enumerate}
 \item \emph{What} thing is being accessed?
@@ -90,16 +92,7 @@ Before we look at API usage patterns, we first present our classification framew
 \end{enumerate}
 
 The ``why not'' dimension differentiates uses from misuses; an API use that is allowed and expected by the API developer does not have an answer for ``why not''. Considering intended versus actual API surfaces gives another
-perspective on the ``why not'' question. The other dimensions serve to classify the API use or misuse and understand which kinds of uses and misuses are most common. We produce lists for the ``what'' and ``how'' dimensions by enumerating different ways a class and its members can be used. Similarly, for ``why not'', we enumerate access control mechanisms and ways to bypass them. These lists are not exhaustive and can be constantly added to.
-
-We intend for this framework to serve as a guideline for component developers who want to introspect about their software. Library developers can use this framework when they design new APIs to understand which parts of their library are most useful to clients and how. Client developers can use this framework to inspect how libraries are used and possibly to compare and contrast different libraries with the same functionality.
-
-\section{API Usage Patterns}
-\label{sec:patterns}
-
-We now discuss API usage patterns with examples. Our examples use the \textit{connector-j} library\footnote{\url{https://github.com/mysql/mysql-connector-j/}, release 8.0.26}, which enables Java programs to communicate with MySQL databases. Namespaces are omitted for brevity. The standard Java library JDBC types belong to package \texttt{java.sql} and MySQL classes to packages \texttt{com.mysql.cj.jdbc.*}. Most of the code snippets are not considered best practice, and therefore illustrate API misuses.
-
-We suggest that it is useful to think of misuse as on a
+perspective on the ``why not'' question. The other dimensions serve to classify the API use or misuse and understand which kinds of uses and misuses are most common. We suggest that it is useful to think of misuse as on a
 continuum rather than as a strict binary allowed-versus-not-allowed.
 Some uses are more appropriate than others: when a
 client passes an object to a serialization library, it is asking
@@ -109,6 +102,12 @@ Finally, explicitly calling into internal classes is likely to be a mis-use.
 All bypasses some incur technical debt and add to the project's risk,
 but some bypasses are more risky than others.
 
+We produce lists for the ``what'' and ``how'' dimensions by enumerating different ways a class and its members can be used. Similarly, for ``why not'', we enumerate access control mechanisms and ways to bypass them. These lists are not exhaustive and can be constantly added to.
+
+\section{API Usage Patterns}
+\label{sec:patterns}
+
+We now discuss API usage patterns with examples. Our examples use the \textit{connector-j} library\footnote{\url{https://github.com/mysql/mysql-connector-j/}, release 8.0.26}, which enables Java programs to communicate with MySQL databases. Namespaces are omitted for brevity. The standard Java library JDBC types belong to package \texttt{java.sql} and MySQL classes to packages \texttt{com.mysql.cj.jdbc.*}. Most of the code snippets are not considered best practice, and therefore illustrate API misuses.
 
 \subsection{Vanilla API Usage}
 
@@ -167,7 +166,7 @@ Java has mechanisms for preventing unwanted reflective accesses in general. In a
 
 At this stage, we'd like to reiterate our goal in investigating API accesses. We've discussed vanilla API usages and reflective accesses to APIs. These two types of accesses have different affordances in terms of program evolution, and we aim to empirically evaluate how developers access libraries in practice, so that we (and others) can develop tools to help developers achieve more stability.
 
-Upon a breaking upgrade, a vanilla API usage will fail to compile. Reflection is more dynamic---developers have the power to query the system and to adapt to the actual versions of the components that they are interacting with. If they use this power, then their code can be more resilient. However, failures that do arise can be more subtle and severe. The same phenomenon is present in Rinard's acceptability-oriented computing~\cite{rinard03:_accep}.
+Upon a syntactic breaking upgrade, a vanilla API usage will fail to compile. Reflection is more dynamic---developers have the power to query the system and to adapt to the actual versions of the components that they are interacting with. If they use this power, then their code can be more resilient. However, failures that do arise can be more subtle and severe, these include semantic failures. The same phenomenon is present in Rinard's acceptability-oriented computing~\cite{rinard03:_accep}.
 
 Dynamic techniques like reflection in data binding and persistence mapping pose additional perils. Even minor changes to classes can render data produced with previous versions un-readable. Adding, removing or modifying a field in a class mapped to a relational database table requires altering the table and migrating data. Adding a custom constructor (and thereby removing the default constructor) or removing a setter method may derail a deserialization mechanism based on the Java bean model (for example, \texttt{java.bean.XMLDecoder}). Binary serialization has long suffered from this problem. 
 
@@ -496,7 +495,7 @@ We investigated all \texttt{setAccessible()} calls on fields that belong to in \
 
 We found that 23\% of the calls to \texttt{setAccessible()} were on methods. Of those, only 2 distinct methods that were reflectively invoked were previously not accessible. We manually inspected all of the reflective callers of these 2 methods. Protected method \texttt{Node.setParentNode()} in \emph{jsoup} is called from code in \texttt{org.seimicrawler.xpath} in \emph{JsoupXpath}. This appears to be test code committed to the main repository. The next method is the default-visibility method \texttt{getInstance()}. This method is used to obtain a singleton instance of {\tt ReflectionNavigator} from within the same project. The motivation for developers calling \texttt{setAccessible} within the same project is unclear to us, rather than modifying the code themselves. This work can help developers identify such instances and possibly refactor their code.
 
-We do find that some methods are already accessible before being invoked, and some methods are made accessible but never actually invoked
+We do find that some methods are already accessible before being invoked, and some methods are made accessible but never actually invoked.
 
 An API bypass requires a \texttt{setAccessible()} call followed by an
 actual reflective access.  As expected, we see a good overlap between the
@@ -602,14 +601,17 @@ of the 258 API methods, compared to the 25 methods used by our selected
 clients. One possible reason for the sparsity of API use is that, at least in \emph{json}, over half of the API methods are overloaded, i.e. share a name with
 some other API method.
 
-
 % reads or writes would be nice to know, but we can't get it in time.
 Despite standard OO practices calling for fields to be encapsulated, more than half of the libraries have their fields accessed by clients. Only 1 of the \emph{joda-time} and 25 of the \emph{jackson-core} fields are static (so it's not just constants); the rest of the accesses are to instance fields.
 However, the number of fields used is often in the single digits,
 the \emph{jackson} libraries being an exception with about 11\% of declared fields used.
+We inspected the use of \emph{jackson} fields and found that these usages mostly exist within the \emph{jackson} libraries themselves.
+As an example, we found that the {\tt WritableTypeId} class belonging to \emph{jackson-core} is used often, usually by \emph{jackson-databind}. 
+{\tt WritableTypeId} is intended to be used for passing information, and so the use of its fields is expected.
+
 About half of the libraries have clients subclassing a
 single-digit number of library types, again with the exception of
-\emph{jackson} with dozens of subtypes in clients.
+\emph{jackson} with dozens of subtypes in clients, which are also often other \emph{jackson} libraries.
 
 We observe only one use of library annotations across all our benchmarks. \emph{crushpaper} uses \texttt{com.fasterxml.jackson.databind.annotation.JacksonStdImpl}, which is used for indicating implementation classes and is typically used by serializers and deserializers in \emph{jackson}.
 
@@ -635,10 +637,8 @@ a half-dozen client pairs (data points) where there is about 50\% overlap betwee
 %% Digging into \emph{fastjson}, we found that it is a ``mixed type'' library: some clients use APIs related
 %% to \texttt{javax.ws.rs}, the JEE standard for restful services, while others use just a standalone parser API that does not implement an external specification. 
 
-
 We were not surprised by the generally small amounts of overlap, because the libraries' exposed API surfaces tended
-to have thousands of exposed elements and hundreds of used elements. This result makes a convincing argument for our discussion about \emph{fastjson} and \emph{jsoup} in Sections~\ref{sec:fastjson-fission} and \ref{sec:jsoup-fission} how they could be fissioned into modules. Generally, across our benchmarks, small number of members are used by
-multiple clients, but many others are used only once.
+to have thousands of exposed elements and hundreds of used elements. This result makes a convincing argument for libraries being fissioned into modules, which we discuss further in Section~\ref{sec:fission}. 
 
 Table~\ref{tab:same-method} presents another view of API overlap between clients. We constructed the largest set
 of methods shared by more than 1 client of a library (``max-set'') and report the size of that set as well as the percentage

@@ -17,10 +17,10 @@ There is also the construct validity issue: tests may
 not adequately represent actual client behaviours. 
 Dietrich et al discuss this in their work~\cite{dietrich2017construction}; 
 they find that coverage by unit tests is low, 
-but is made up for by the fact that programmers are likely to write tests for the more relevant parts of the code.
-.
-Our use of both static
+but is made up for by the fact that programmers are likely to write tests for the more relevant and popular
+parts of the code. Our use of both static
 and dynamic information addresses the issue of low coverage. 
+
 Specifically, because we use
 class hierarchy analysis for our static analysis, our visualization will present
 all possible static calls---possibly too many. 
@@ -67,6 +67,12 @@ This corroborates the same finding in Thummalapenta and Xie~\cite{thummalapenta0
 We also see that our clients call into parts of libraries with a limited but nonzero overlap. 
 An interesting experiment would be to plot cumulative usage as the number of clients increases and observe if the percentage of APIs used reaches a saturation
 point.
+
+We can also extend our API usage study further by investigating why certain APIs are used the way that they are. 
+It was interesting to observe that reflection and \texttt{setAccessible()} are commonly used for serialization, this is done to gain access to fields of objects to be serialized.
+Other observations from our study include reflection and \texttt{setAccessible()} being used on methods, 
+reflection and \texttt{setAccessible()} being used on things that are already accessible (for example, public methods), 
+accesses to non-constant fields of a library by a client and so on. Understanding the reason for these usage patterns can aid in better API design in the future.
 
 Further user evaluations of our VizAPI tool can establish and improve the
 effectiveness of VizAPI. This can be performed following
