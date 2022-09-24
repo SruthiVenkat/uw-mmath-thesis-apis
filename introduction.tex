@@ -35,7 +35,7 @@ The contributions of this work include:
 \item a case study on the concept of library fission
 \end{itemize}
 
-Our tool collects static information and also instruments Java code to collect dynamic instrumentation data about API uses in practice. This includes different patterns of interactions across components, such as vanilla invocations, field usage, annotation usage, subtyping, dynamic proxies, reflective calls and service loaders. 
+Our tool collects static information and also instruments Java code to collect dynamic instrumentation data about API uses in practice. This includes different patterns of interactions across components, such as vanilla invocations, field usage, annotation usage, subtyping, dynamic proxies, reflective calls and service loaders. The tool records these interactions across the boundaries of clients, libraries and transitive dependencies.
 
 Using the tool's output, we empirically study how developers access libraries in practice, so that we (and others) can develop tools to help developers achieve more stability. Additionally, we present a classification framework to help developers classify different API uses. We conduct our study on a corpus of 11 open-source libraries and 90 clients. We have generated API usage data for this corpus of 101 projects, which we have made publicly available. 
 

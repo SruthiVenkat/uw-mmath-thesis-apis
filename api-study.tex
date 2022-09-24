@@ -55,7 +55,7 @@ we can see that the actual API surface includes classes
 \section{Classification of API Uses}
 \label{sec:classification}
 
-Before we look at API usage patterns, we first present our classification framework for classifying API uses and also to understand if an API use is a misuse. We intend for this framework to serve as a guideline for component developers who want to understand their software's interactions with other components. Library developers can use this framework when they design new APIs to understand which parts of their library are most useful to clients and how. Client developers can use this framework to inspect how libraries are used and possibly to compare and contrast different libraries with the same functionality.
+Before we look at API usage patterns, we first present our classification framework for classifying API uses and also to understand whether an API use is a misuse. We intend for this framework to serve as a guideline for component developers who want to understand their software's interactions with other components. Library developers can use this framework to understand which parts of their library are actually exported and used by clients. They can reflect on whether these client uses of their APIs are expected or unexpected based on their original design; this could prove useful when they design new APIs. Client developers can possibly use this framework to compare and contrast the design of different libraries with similar functionality.
 
 This conceptual framework outlines four dimensions along which a potential API use can be classified. We phrase the four dimensions as questions; each API usage has an answer for each of the questions. They are as follows: \emph{what}, \emph{how} \emph{which way} and \emph{why not}?
 
@@ -426,7 +426,7 @@ instantiations and casts.
 \subsection{Benchmark Selection}
 \label{sec:benchmark}
 Our benchmark set consists of 11 libraries and 90 clients. For libraries, we pick the most popular Maven 
-repositories in different categories such as logging, json parsing and databases. Table~\ref{tab:libs} presents our set of libraries. We measured lines of code (kLOC) using SLOCcount\footnote{\url{https://dwheeler.com/sloccount/}} and number of classes by building libraries and counting resulting \texttt{.class}es. A project uses ServiceLoaders if it has a \texttt{META-INF/services} directory and Java 9 modules if it has a \texttt{module-info.java} file. A library is an OSGi component if it contains a \texttt{MANIFEST.MF} file in its build output\footnote{Some libraries (for example, \emph{connector-j}) create OSGi metadata during the build, so we look for the metadata in the output, not in the source.}, and this manifest contains \texttt{Export-Package} declarations. 
+repositories in different categories such as logging, json parsing and databases. Table~\ref{tab:libs} presents our set of libraries. We measured lines of code (kLOC) using SLOCcount\footnote{\url{https://dwheeler.com/sloccount/}} and number of classes by building libraries and counting resulting \texttt{.class}es. A project uses ServiceLoaders if it has a \texttt{META-INF/services} directory and Java 9 modules if it has a \texttt{module-info.java} file. A library is an OSGi component if it contains a \texttt{MANIFEST.MF} file in its build output\footnote{Some libraries (for example, \emph{connector-j}) create OSGi metadata during the build, so we look for the metadata in the build output, not in the source.}, and this manifest contains \texttt{Export-Package} declarations. 
 
 \begin{table}[h]
 \begin{center}
@@ -461,7 +461,7 @@ We executed each of the clients' test suites to collect data about how the clien
 
 Collecting execution data from programs is more challenging than it seems: downloading software and collecting static numbers is fairly straightforward, but running this software to instrument it involves fixing numerous uninteresting environment glitches which nevertheless block progress---even in the stable environment of a continuous integration system at a large software company, Kerzazi et al~\cite{kerzazi14:_why_do_autom_build_break} found that 17.9\% of builds break, and our context is even more challenging.
 
-While our current benchmark set consists of 101 projects, it is possible to run both our static and dynamic analysis tool and the VizAPI visualization tool on new libraries and clients. However, when either tool is run by a library developer, they are required to provide a specific set of clients that they wish to observe as input to the tools. Libraries.io can be used to find popular clients of libraries, it provides a dependency tree based on projects' packaging information.
+While our current benchmark set consists of 101 projects, it is possible to run both our static and dynamic analysis tool and the VizAPI visualization tool on new libraries and clients. However, when either tool is run by a library developer, they are required to provide a specific set of clients that they wish to observe as input to the tools. Libraries.io can be used to find popular clients of libraries---it provides a dependency tree based on projects' packaging information.
 
 We have made our existing data publicly available\footnote{\url{https://zenodo.org/record/6951140}}.
 
