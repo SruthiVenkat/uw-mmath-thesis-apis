@@ -1,0 +1,14 @@
+*.bbl
+*.blg
+*~
+*.glo
+*.glg
+*.glo-abr
+*.lo?
+*-gl?
+*.out
+*.toc
+*.aux
+*.gl?-abr
+*.ist
+*.gls
