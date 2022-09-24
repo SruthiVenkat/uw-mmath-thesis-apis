@@ -13,41 +13,6 @@
 }
 
 
-@inproceedings{10.1145/2814270.2814313,
-author = {Mastrangelo, Luis and Ponzanelli, Luca and Mocci, Andrea and Lanza, Michele and Hauswirth, Matthias and Nystrom, Nathaniel},
-title = {Use at Your Own Risk: The Java Unsafe API in the Wild},
-year = {2015},
-isbn = {9781450336895},
-publisher = {Association for Computing Machinery},
-address = {New York, NY, USA},
-url = {https://doi.org/10.1145/2814270.2814313},
-doi = {10.1145/2814270.2814313},
-abstract = { Java is a safe language. Its runtime environment provides strong safety guarantees
-that any Java application can rely on. Or so we think. We show that the runtime actually
-does not provide these guarantees---for a large fraction of today's Java code. Unbeknownst
-to many application developers, the Java runtime includes a "backdoor" that allows
-expert library and framework developers to circumvent Java's safety guarantees. This
-backdoor is there by design, and is well known to experts, as it enables them to write
-high-performance "systems-level" code in Java. For much the same reasons that safe
-languages are preferred over unsafe languages, these powerful---but unsafe---capabilities
-in Java should be restricted. They should be made safe by changing the language, the
-runtime system, or the libraries. At the very least, their use should be restricted.
-This paper is a step in that direction. We analyzed 74 GB of compiled Java code, spread
-over 86,479 Java archives, to determine how Java's unsafe capabilities are used in
-real-world libraries and applications. We found that 25% of Java bytecode archives
-depend on unsafe third-party Java code, and thus Java's safety guarantees cannot be
-trusted. We identify 14 different usage patterns of Java's unsafe capabilities, and
-we provide supporting evidence for why real-world code needs these capabilities. Our
-long-term goal is to provide a foundation for the design of new language features
-to regain safety in Java. },
-booktitle = {Proceedings of the 2015 ACM SIGPLAN International Conference on Object-Oriented Programming, Systems, Languages, and Applications},
-pages = {695–710},
-numpages = {16},
-keywords = {patterns, unsafe, Java, {Maven} Central, mining, Stack Overflow},
-location = {Pittsburgh, PA, USA},
-series = {OOPSLA 2015}
-}
-
 @article{blondel2008fast,
   title={Fast unfolding of communities in large networks},
   author={Blondel, Vincent D and Guillaume, Jean-Loup and Lambiotte, Renaud and Lefebvre, Etienne},
@@ -62,7 +27,7 @@ series = {OOPSLA 2015}
 @Article{evans20:_unsaf,
   author =       {Ben Evans},
   title =        {The {Unsafe} class: Unsafe at any speed},
-  journal =      {Java Magazine},
+  journal =      {{Java} Magazine},
   year =         2020,
   month =     {May},
   note =      {\url{https://blogs.oracle.com/javamagazine/post/the-unsafe-class-unsafe-at-any-speed}}}
@@ -233,7 +198,7 @@ publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
 url = {https://doi.org/10.1145/3324884.3421838},
 doi = {10.1145/3324884.3421838},
-abstract = {With one of the largest available collection of reusable packages, the JavaScript
+abstract = {With one of the largest available collection of reusable packages, the {JavaScript}
 runtime environment Node.js is one of the most popular programming application. With
 recent work showing evidence that known vulnerabilities are prevalent in both open
 source and industrial software, we propose and implement a viable code-based vulnerability
@@ -296,7 +261,7 @@ author = {Fitzgerald, Bob and Knoblock, Todd B. and Ruf, Erik and Steensgaard, B
 title = {Marmot: An Optimizing Compiler for {Java}},
 year = {2000},
 month = {March},
-abstract = {The Marmot system is a research platform for studying the implementation of high level programming languages. It currently comprises an optimizing native code compiler, runtime system, and libraries for a large subset of Java. Marmot integrates well-known representation, optimization, code generation, and runtime techniques with a few Java-specific features to achieve competitive performance. This paper contains a description of the Marmot system design, along with highlights of our experience applying and adapting traditional implementation techniques to Java. A detailed performance evaluation assesses both Marmot's overall performance relative to other Java and C++ implementations, and the relative costs of various Java language features in Marmot-compiled code. Our experience with Marmot has demonstrated that well-known compilation techniques can produce very good performance for static Java applications comparable or superior to other Java systems, and approaching that of C++ in some cases.},
+abstract = {The Marmot system is a research platform for studying the implementation of high level programming languages. It currently comprises an optimizing native code compiler, runtime system, and libraries for a large subset of {Java}. Marmot integrates well-known representation, optimization, code generation, and runtime techniques with a few {Java}-specific features to achieve competitive performance. This paper contains a description of the Marmot system design, along with highlights of our experience applying and adapting traditional implementation techniques to {Java}. A detailed performance evaluation assesses both Marmot's overall performance relative to other {Java} and C++ implementations, and the relative costs of various {Java} language features in Marmot-compiled code. Our experience with Marmot has demonstrated that well-known compilation techniques can produce very good performance for static {Java} applications comparable or superior to other {Java} systems, and approaching that of C++ in some cases.},
 publisher = {Wiley},
 url = {https://www.microsoft.com/en-us/research/publication/marmot-an-optimizing-compiler-for-java/},
 pages = {29},
@@ -348,7 +313,7 @@ isbn = 9781450370431,
 publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
 url = {https://doi.org/10.1145/3368089.3409738},
-abstract = {Modern software is bloated. Demand for new functionality has led developers to include more and more features, many of which become unneeded or unused as software evolves. This phenomenon, known as software bloat, results in software consuming more resources than it otherwise needs to. How to effectively and automatically debloat software is a long-standing problem in software engineering. Various debloating techniques have been proposed since the late 1990s. However, many of these techniques are built upon pure static analysis and have yet to be extended and evaluated in the context of modern Java applications where dynamic language features are prevalent.  To this end, we develop an end-to-end bytecode debloating framework called JShrink. It augments traditional static reachability analysis with dynamic profiling and type dependency analysis and renovates existing bytecode transformations to account for new language features in modern Java. We highlight several nuanced technical challenges that must be handled properly and examine behavior preservation of debloated software via regression testing. We find that (1) JShrink is able to debloat our real-world Java benchmark suite by up to 47% (14% on average); (2) accounting for dynamic language features is indeed crucial to ensure behavior preservation---reducing 98% of test failures incurred by a purely static equivalent, Jax, and 84% for ProGuard; and (3) compared with purely dynamic approaches, integrating static analysis with dynamic profiling makes the debloated software more robust to unseen test executions---in 22 out of 26 projects, the debloated software ran successfully under new tests.},
+abstract = {Modern software is bloated. Demand for new functionality has led developers to include more and more features, many of which become unneeded or unused as software evolves. This phenomenon, known as software bloat, results in software consuming more resources than it otherwise needs to. How to effectively and automatically debloat software is a long-standing problem in software engineering. Various debloating techniques have been proposed since the late 1990s. However, many of these techniques are built upon pure static analysis and have yet to be extended and evaluated in the context of modern {Java} applications where dynamic language features are prevalent.  To this end, we develop an end-to-end bytecode debloating framework called {JShrink}. It augments traditional static reachability analysis with dynamic profiling and type dependency analysis and renovates existing bytecode transformations to account for new language features in modern {Java}. We highlight several nuanced technical challenges that must be handled properly and examine behavior preservation of debloated software via regression testing. We find that (1) {JShrink} is able to debloat our real-world {Java} benchmark suite by up to 47% (14% on average); (2) accounting for dynamic language features is indeed crucial to ensure behavior preservation---reducing 98% of test failures incurred by a purely static equivalent, Jax, and 84% for ProGuard; and (3) compared with purely dynamic approaches, integrating static analysis with dynamic profiling makes the debloated software more robust to unseen test executions---in 22 out of 26 projects, the debloated software ran successfully under new tests.},
 booktitle = {Proceedings of the 28th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering},
 pages = {135–146},
 numpages = 12
@@ -375,7 +340,7 @@ number = 6,
 issn = {0164-0925},
 url = {https://doi.org/10.1145/586088.586090},
 doi = {10.1145/586088.586090},
-abstract = {Reducing application size is important for software that is distributed via the internet, in order to keep download times manageable, and in the domain of embedded systems, where applications are often stored in (Read-Only or Flash) memory. This paper explores extraction techniques such as the removal of unreachable methods and redundant fields, inlining of method calls, and transformation of the class hierarchy for reducing application size. We implemented a number of extraction techniques in Jax, an application extractor for Java, and evaluated their effectiveness on a set of large Java applications. We found that, on average, the class file archives for these benchmarks were reduced to 37.5% of their original size. Modeling dynamic language features such as reflection, and extracting software distributions other than complete applications requires additional user input. We present a uniform approach for supplying this input that relies on MEL, a modular specification language. We also discuss a number of issues and challenges associated with the extraction of embedded systems applications.},
+abstract = {Reducing application size is important for software that is distributed via the internet, in order to keep download times manageable, and in the domain of embedded systems, where applications are often stored in (Read-Only or Flash) memory. This paper explores extraction techniques such as the removal of unreachable methods and redundant fields, inlining of method calls, and transformation of the class hierarchy for reducing application size. We implemented a number of extraction techniques in Jax, an application extractor for {Java}, and evaluated their effectiveness on a set of large {Java} applications. We found that, on average, the class file archives for these benchmarks were reduced to 37.5% of their original size. Modeling dynamic language features such as reflection, and extracting software distributions other than complete applications requires additional user input. We present a uniform approach for supplying this input that relies on MEL, a modular specification language. We also discuss a number of issues and challenges associated with the extraction of embedded systems applications.},
 journal = {ACM Trans. Program. Lang. Syst.},
 month = {nov},
 pages = {625–666},
@@ -401,7 +366,7 @@ title     = {{DUETS:} {A} Dataset of Reproducible Pairs of {Java} Library-Client
 year      = {2021},
 	Comment = {<b>Data showcase award</b>},
 	booktitle={MSR},
-	KEYWORDS = {Java,diversity,award},
+	KEYWORDS = {{Java},diversity,award},
 	X-International-Audience = {yes},
 	X-Language = {EN},
 	x-abbrv = {MSR}	
@@ -527,7 +492,7 @@ journal = {SIGPLAN Not.},
 month = oct,
 pages = {695–710},
 numpages = 16,
-keywords = {mining, patterns, {Maven} Central, Stack Overflow, unsafe, Java}
+keywords = {mining, patterns, {Maven Central}, {Stack Overflow}, unsafe, {Java}}
 }
 
 @Article{zhong19:_empir_study_api_usages,
@@ -693,9 +658,11 @@ series = {MSR '18}
   organization={IEEE}
 }
 
-@article{venkatanarayananvizapi,
-  title={{VizAPI}: Visualizing Interactions between Java Libraries and Clients},
-  author={Venkatanarayanan, Sruthi and Dietrich, Jens and Anslow, Craig and Lam, Patrick}
+@inproceedings{venkatanarayananvizapi,
+  title={{VizAPI}: Visualizing Interactions between {Java} Libraries and Clients},
+  author={Venkatanarayanan, Sruthi and Dietrich, Jens and Anslow, Craig and Lam, Patrick},
+  booktitle={10th IEEE Working Conference on Software Visualization (VISSOFT 2022)},
+  year=2022
 }
 
 @inproceedings{dietrich2017construction,

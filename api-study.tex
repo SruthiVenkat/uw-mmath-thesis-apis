@@ -185,7 +185,7 @@ Listing~\ref{listing:service-loader} shows an example of a client requesting an 
 
 Access modifiers are not the only way to protect APIs from being
 called directly by clients.  Java's namespace is segregated by
-hierarchical package names, but there are no enforced access controls at the level of granularity of packages in plain Java. 
+hierarchical package names, but there is no way to prevent access into packages as a whole in plain Java. 
 The Java standard library does state the modularity convention
 that some of its implementation (specifically the classes living in
 the \texttt{sun.*} namespace) is not to be used by clients, but this
@@ -298,7 +298,7 @@ Now that we have looked at some API usage and misuse patterns, we next describe 
 We also discuss our benchmark selection process in this section.
 
 \subsection{Static Analysis and Instrumentation}
-\label{sec:methodology}
+\label{sec:analyses}
 
 We use Javassist~\cite{chiba00:_load_struc_reflec_java} to perform class hierarchy analysis on clients
 and create a static call graph. We collect data about client usages of libraries by running client
@@ -608,8 +608,9 @@ Despite standard OO practices calling for fields to be encapsulated, more than h
 However, the number of fields used is often in the single digits,
 the \emph{jackson} libraries being an exception with about 11\% of declared fields used.
 We inspected the use of \emph{jackson} fields and found that these usages mostly exist within the \emph{jackson} libraries themselves.
-As an example, we found that the {\tt WritableTypeId} class belonging to \emph{jackson-core} is used often, usually by \emph{jackson-databind}. 
-{\tt WritableTypeId} is intended to be used for passing information, and so the use of its fields is expected.
+We count calls that happen across the \emph{jackson} libraries as crossing library/client boundaries.
+An example of these usages is the {\tt WritableTypeId} class belonging to \emph{jackson-core}, which is used often, and usually by \emph{jackson-databind}.
+{\tt WritableTypeId} is a Java class like a C-style struct; it exposes fields and not methods. It is intended to be used for passing information, and the use of its fields is expected.
 
 About half of the libraries have clients subclassing a
 single-digit number of library types, again with the exception of
