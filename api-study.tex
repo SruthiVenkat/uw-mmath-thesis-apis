@@ -186,8 +186,8 @@ Listing~\ref{listing:service-loader} shows an example of a client requesting an 
 %Libraries advertise services as part of their metadata. This advertises both the capabilities of a component and its intended API. [Do we need this?]
 
 Access modifiers are not the only way to protect APIs from being
-called directly by clients.  Java's namespace is segregated by
-hierarchical package names, but there is no way to prevent access into packages as a whole in plain Java. 
+called directly by clients. Java's namespace is segregated by
+hierarchical package names, but there is no way to allow or deny others access to specific packages (at a package level granularity) in plain Java. 
 The Java standard library does state the modularity convention
 that some of its implementation (specifically the classes living in
 the \texttt{sun.*} namespace) is not to be used by clients, but this
@@ -612,7 +612,7 @@ the \emph{jackson} libraries being an exception with about 11\% of declared fiel
 We inspected the use of \emph{jackson} fields and found that these usages mostly exist within the \emph{jackson} libraries themselves.
 We count calls that happen across the \emph{jackson} libraries as crossing library/client boundaries.
 An example of these usages is the {\tt WritableTypeId} class belonging to \emph{jackson-core}, which is used often, and usually by \emph{jackson-databind}.
-{\tt WritableTypeId} is a Java class like a C-style struct; it exposes fields and not methods. It is intended to be used for passing information, and the use of its fields is expected.
+{\tt WritableTypeId} is a Java class that acts like a C-style struct; it exposes fields and not methods. It is intended to be used for passing information, and the use of its fields is expected.
 
 About half of the libraries have clients subclassing a
 single-digit number of library types, again with the exception of
